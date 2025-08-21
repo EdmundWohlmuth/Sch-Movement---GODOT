@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtb1e7t0ows0j"]
+[gd_scene load_steps=11 format=3 uid="uid://dtb1e7t0ows0j"]
 
+[ext_resource type="PackedScene" uid="uid://dchu2h8g3tulp" path="res://Scenes/UI/Gameplay UI.tscn" id="1_8sekd"]
 [ext_resource type="Material" uid="uid://cbkyu3m6ymch0" path="res://Mats/TestGray.tres" id="1_8yeky"]
 [ext_resource type="Material" uid="uid://btowfidmpjejc" path="res://Mats/TestOrange.tres" id="2_dksy8"]
 [ext_resource type="PackedScene" uid="uid://d12tyfkvb4luu" path="res://Scenes/Player/player_char.tscn" id="3_tr2c4"]
@@ -12,7 +13,14 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_i1qcp"]
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_23u5w"]
+height = 0.800478
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pwcqi"]
+
 [node name="TestLevel" type="Node3D"]
+
+[node name="GameplayUi" parent="." instance=ExtResource("1_8sekd")]
 
 [node name="Floor" type="StaticBody3D" parent="."]
 
@@ -20,7 +28,7 @@
 shape = SubResource("WorldBoundaryShape3D_2sfa5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(26, 0, 0, 0, 26, 0, 0, 0, 26, 0, 0, 0)
+transform = Transform3D(200, 0, 0, 0, 200, 0, 0, 0, 200, 0, 0, 0)
 material_override = ExtResource("1_8yeky")
 mesh = SubResource("PlaneMesh_wxbyk")
 
@@ -38,7 +46,6 @@ mesh = SubResource("BoxMesh_i1qcp")
 transform = Transform3D(25, 0, 0, 0, 10, 0, 0, 0, 5, 2, 5, -15)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_sq151")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Box2"]
@@ -62,13 +69,66 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 18, -8, 7, -5)
 shape = SubResource("BoxShape3D_sq151")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Box4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.333333, 0)
 material_override = ExtResource("2_dksy8")
 mesh = SubResource("BoxMesh_i1qcp")
+
+[node name="Box5" type="StaticBody3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 11, 17.5149, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box5"]
+shape = SubResource("BoxShape3D_sq151")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box5"]
+material_override = ExtResource("2_dksy8")
+mesh = SubResource("BoxMesh_i1qcp")
+
+[node name="Box6" type="StaticBody3D" parent="."]
+transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 2, 12, -35)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box6"]
+shape = SubResource("BoxShape3D_sq151")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box6"]
+material_override = ExtResource("2_dksy8")
+mesh = SubResource("BoxMesh_i1qcp")
+
+[node name="Box8" type="StaticBody3D" parent="."]
+transform = Transform3D(38.9711, -12.5, 0, 22.5, 21.6506, 0, 0, 0, 25, -23.737, 2.422, -35)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box8"]
+shape = SubResource("BoxShape3D_sq151")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box8"]
+material_override = ExtResource("2_dksy8")
+mesh = SubResource("BoxMesh_i1qcp")
+
+[node name="Box7" type="StaticBody3D" parent="."]
+transform = Transform3D(15, 0, 0, 0, 25, 0, 0, 0, 200, 63, 12, 11)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box7"]
+shape = SubResource("BoxShape3D_sq151")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box7"]
+material_override = ExtResource("2_dksy8")
+mesh = SubResource("BoxMesh_i1qcp")
+
+[node name="Cylindar1" type="StaticBody3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, -25, 19.5149, 11.2379)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylindar1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0)
+shape = SubResource("CylinderShape3D_23u5w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cylindar1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.25, 0)
+material_override = ExtResource("2_dksy8")
+mesh = SubResource("CylinderMesh_pwcqi")
 
 [node name="PlayerCharacterBody" parent="." instance=ExtResource("3_tr2c4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866025, 0.433013, -0.25, 0, 0.5, 0.866025, 0.5, -0.75, 0.433013, 0, 35, 0)
+transform = Transform3D(0.866025, 0.433013, -0.25, 0, 0.5, 0.866025, 0.5, -0.75, 0.433013, 0, 56, 35)
 shadow_enabled = true
 shadow_blur = 0.0
