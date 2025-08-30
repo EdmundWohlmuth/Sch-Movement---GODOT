@@ -15,7 +15,7 @@ var ground_accel:float = 14.0
 var ground_deccel:float = 13.0
 
 var norm_deccel:float = 13.0
-var slide_deccel:float = 25.0
+var slide_deccel:float = 18.0
 
 var air_accel:float = 4.0
 var air_speed = 28.0
@@ -38,6 +38,7 @@ var fall_acceleration:float = 3.0
 var total_jumps:int = 1
 var available_jumps:int = 1
 var wall_normal:Vector3 = Vector3.ZERO
+var ground_normal:Vector3 = Vector3.ZERO
 # === state bools === #
 var is_sliding:bool = false
 var is_on_wall:bool = false
@@ -78,9 +79,11 @@ func _physics_process(delta):
   if is_on_floor() || is_on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
-    if is_on_wall: press_to_wall(delta) ## ADD SLIDING DOWN WALL WHENNOT MOVING
+    if wallrun_shape_cast.is_colliding(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHENNOT MOVING
     
-    if is_on_floor() && !is_on_wall: crouch_slide(delta)
+    if !is_on_wall:
+      crouch_slide(delta)
+      slope_stick(delta) 
     
     handle_movement(delta)
   elif !is_on_floor() || !is_on_wall:
@@ -98,14 +101,23 @@ func _physics_process(delta):
     ground_deccel = norm_deccel
     crouch_char(false)
     slide_cooldown_timer.start()
+    
   move_and_slide()
 
 func apply_gravity(delta):
   if !is_on_floor() && !is_on_wall:
-    velocity.y -= gravity * delta
-  
-  if !is_on_floor() && !is_on_wall && velocity.y < 0:
-    velocity.y -= (fall_acceleration + gravity) * delta
+    if velocity.y < 0: velocity.y -= (fall_acceleration + gravity) * delta
+    else: velocity.y -= gravity * delta
+    
+# Allows players to slide down slodes
+func slope_stick(delta):
+  var _normal = get_floor_normal()
+  if _normal.y == 1.0: 
+    up_direction = Vector3.UP
+    return # don't need to stick if surface is flat
+  up_direction = _normal
+  self.velocity += _normal * 10 * delta
+  #var transform:Transform3D = global_transform
     
 # Handles jump input and physics
 func handle_jump():
@@ -170,6 +182,8 @@ func crouch_slide(delta):
     crouch_char()
     ground_deccel = slide_deccel
     velocity += slide_speed_boost * direction
+    max(self.velocity.length(), ground_deccel)
+    
   elif Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
     crouch_char(false)
