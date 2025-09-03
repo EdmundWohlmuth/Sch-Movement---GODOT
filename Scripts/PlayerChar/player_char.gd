@@ -27,7 +27,7 @@ var look_speed:float = 0.01
 
 var grapple_distance:float = 20.0
 var grapple_cooldown_time:float = 0.5
-var grapple_speed:float = 100.0
+var grapple_speed:float = 200.0
 var can_grapple:bool = true
 var grapple_vector:Vector3 = Vector3.ZERO
 var grapple_point:Vector3 = Vector3.ZERO
@@ -51,6 +51,7 @@ var wallrun_tilt_angle:float = 25
 # === raycasts === #
 @onready var grapple_cast = $Head/Camera3D/RayCast3D
 @onready var wallrun_shape_cast = $WallRunShapeCast
+@onready var grounding_ray: RayCast3D = $GroundingRayCast3D
 
 # === Objects === #
 @onready var head = $Head
@@ -75,7 +76,7 @@ func _physics_process(delta):
   manage_input()
   on_wall_check()
   
-  # Apply movement
+  # Apply ground movement
   if is_on_floor() || is_on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
@@ -111,7 +112,7 @@ func apply_gravity(delta):
     
 # Allows players to slide down slodes
 func slope_stick(delta):
-  var _normal = get_floor_normal()
+  var _normal = grounding_ray.get_collision_normal()
   if _normal.y == 1.0: 
     up_direction = Vector3.UP
     return # don't need to stick if surface is flat
@@ -148,7 +149,13 @@ func get_movement_speed() -> float:
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
-  direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+  if !is_on_wall:
+    direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+  elif is_on_wall:
+    direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+    #direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+    #var cross = direction.cross(wall_normal)
+    #direction = cross
 
 # This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
@@ -203,6 +210,11 @@ func set_grapple():
   
     is_grappling = true
 
+# determines what function is played when the grapple connects with a collision
+func check_grapple_type():
+  pass
+
+# pulls player towards collision area
 func grapple_pull(delta):
     var grapple_dir = (grapple_point - self.position).normalized()
     var grapple_target_speed = grapple_dir * grapple_speed
