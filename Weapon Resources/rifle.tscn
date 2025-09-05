@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhjqed7cdv48m"]
+
+[ext_resource type="Script" uid="uid://dsq4x4xcq01tx" path="res://Weapon Resources/rifle.gd" id="1_uax5r"]
+
+[node name="Rifle" type="Node3D"]
+script = ExtResource("1_uax5r")
+total_ammo = 30
+current_ammo = 30

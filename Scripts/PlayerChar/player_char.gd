@@ -27,7 +27,7 @@ var look_speed:float = 0.01
 
 var grapple_distance:float = 20.0
 var grapple_cooldown_time:float = 0.5
-var grapple_speed:float = 200.0
+var grapple_speed:float = 150.0
 var can_grapple:bool = true
 var grapple_vector:Vector3 = Vector3.ZERO
 var grapple_point:Vector3 = Vector3.ZERO

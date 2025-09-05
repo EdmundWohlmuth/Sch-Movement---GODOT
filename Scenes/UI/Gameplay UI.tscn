@@ -13,8 +13,28 @@ layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 
-[node name="Panel" type="Panel" parent="AspectRatioContainer"]
+[node name="Crosshair" type="Panel" parent="AspectRatioContainer"]
 custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AspectRatioContainer/Crosshair"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 56.0
+offset_bottom = 40.0
+theme_override_font_sizes/bold_italics_font_size = 0
+theme_override_font_sizes/italics_font_size = 0
+theme_override_font_sizes/mono_font_size = 0
+theme_override_font_sizes/normal_font_size = 10
+theme_override_font_sizes/bold_font_size = 0
+text = "25m"
+
+[node name="WeaponLabel" type="Label" parent="."]
+layout_mode = 0
+offset_top = 612.0
+offset_right = 135.0
+offset_bottom = 646.0
+theme_override_font_sizes/font_size = 24
+text = "No Weapon"
