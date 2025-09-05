@@ -15,6 +15,10 @@ run/main_scene="res://Scenes/Levels/test_level.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+WeaponManager="*res://Scripts/Managers/WeaponManager.gd"
+
 [input]
 
 move_forward={

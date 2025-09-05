@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://0omtc6k3agci"]
+
+[ext_resource type="Script" uid="uid://cy85at6j8ln2m" path="res://Scripts/Character Node Scripts/hurt_box.tres.gd" id="1_j73fk"]
+
+[node name="hurt_box" type="Node"]
+script = ExtResource("1_j73fk")
