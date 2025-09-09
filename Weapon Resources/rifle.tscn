@@ -4,5 +4,10 @@
 
 [node name="Rifle" type="Node3D"]
 script = ExtResource("1_uax5r")
+current_weapon_type = 4
+damage = 5
+is_full_auto = true
+projectile_num = 1
+shot_cooldown_time = 0.2
 total_ammo = 30
 current_ammo = 30

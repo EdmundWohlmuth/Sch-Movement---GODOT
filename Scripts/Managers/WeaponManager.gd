@@ -1,4 +1,7 @@
 extends Node
+class_name weapon_node
+
+@export var controller:CharacterBody3D
 
 enum weapons
 {
@@ -12,4 +15,13 @@ enum weapons
   ROCKET_LAUNCHER
 }
 
-var current_weapon:weapons
+@export var current_weapon:weapons
+@export var is_player:bool
+
+func _ready() -> void:
+  pass
+  
+func set_weapon() -> void:
+  #if is_player:
+  pass
+  

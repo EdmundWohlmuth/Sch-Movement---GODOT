@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://cdg7loubbna3d"]
+
+[ext_resource type="Script" uid="uid://dpuniu0yj7mv0" path="res://Scripts/Enemies/enemy_behavior.gd" id="1_613su"]
+[ext_resource type="PackedScene" uid="uid://d30e074jp6nms" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_jcvw6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3pdns"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_613su"]
+
+[node name="EnemyBody" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_613su")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_3pdns")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_613su")
+
+[node name="WeaponManager" parent="." instance=ExtResource("2_jcvw6")]
+is_player = false

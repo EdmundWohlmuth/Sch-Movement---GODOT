@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://d12tyfkvb4luu"]
+[gd_scene load_steps=5 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
+[ext_resource type="PackedScene" uid="uid://d30e074jp6nms" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8vni7"]
 
 [node name="PlayerCharacterBody" type="CharacterBody3D"]
-collision_layer = 2
+collision_layer = 4
 script = ExtResource("1_2bvri")
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
@@ -28,6 +29,7 @@ fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
 target_position = Vector3(0, 0, -25)
+collision_mask = 15
 debug_shape_custom_color = Color(1, 0, 1, 1)
 
 [node name="WallRunShapeCast" type="ShapeCast3D" parent="."]
@@ -38,6 +40,9 @@ shape = SubResource("BoxShape3D_8vni7")
 transform = Transform3D(0.999848, -0.0174524, 7.62869e-10, 0, -4.37114e-08, -1, 0.0174524, 0.999848, -4.37047e-08, 0, -1, 0)
 target_position = Vector3(0, 0, 0.5)
 debug_shape_custom_color = Color(1, 0, 1, 1)
+
+[node name="WeaponManager" parent="." instance=ExtResource("2_pfg0q")]
+is_player = true
 
 [connection signal="timeout" from="SlideCooldownTimer" to="." method="_on_slide_cooldown_timer_timeout"]
 [connection signal="timeout" from="GrappleCooldownTimer" to="." method="_on_grapple_cooldown_timer_timeout"]

@@ -91,7 +91,7 @@ func _physics_process(delta):
     handle_air_strafe(delta)
     apply_gravity(delta) # Add the gravity.
    
-  if Input.is_action_just_pressed("grapple") && can_grapple: set_grapple()
+  if Input.is_action_just_pressed("grapple") && can_grapple: check_grapple_type()
   
   if Input.is_action_pressed("grapple") && can_grapple && is_grappling: grapple_pull(delta)
   elif Input.is_action_just_released("grapple") && is_grappling: grapple_end()
@@ -133,9 +133,11 @@ func on_wall_check():
   if wallrun_shape_cast.is_colliding() && !is_on_wall && !is_on_ceiling():
     is_on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
+    wallrun_juice()
   elif !wallrun_shape_cast.is_colliding() && is_on_wall:
     is_on_wall = false
     wall_normal = Vector3.ZERO
+    wallrun_juice()
 
 # Gets the desired speed of the character
 func get_movement_speed() -> float:
@@ -180,8 +182,14 @@ func handle_air_strafe(delta):
 
 # keeps the player moving toward the wall to allow wallrunning
 func press_to_wall(delta):
+  var up_vector:Vector3 = Vector3.UP
+  var wall_forward = up_vector.cross(wall_normal)
+  var direction = -self.basis.z
+  
+  if ((direction - wall_forward).length() > (direction - -wall_forward).length()): wall_forward = -wall_forward
   self.velocity += wall_normal * 2 * delta
- 
+  self.velocity += wall_forward * 2 * delta
+
 # reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide(delta):
   if Input.is_action_just_pressed("slide") && !is_sliding:
@@ -207,12 +215,16 @@ func set_grapple():
     grapple_point = grapple_cast.get_collision_point()
     var grapple_dir = (grapple_point - self.position).normalized()
     var grapple_target_speed = grapple_dir * grapple_speed
+
   
     is_grappling = true
 
 # determines what function is played when the grapple connects with a collision
 func check_grapple_type():
-  pass
+    if !grapple_cast.is_colliding(): return
+    
+    if grapple_cast.get_collider().collision_layer == 1: set_grapple()
+    elif grapple_cast.get_collider().collision_layer == 2: weapon_steal()
 
 # pulls player towards collision area
 func grapple_pull(delta):
@@ -226,10 +238,17 @@ func grapple_end():
   can_grapple = false
   is_grappling = false
   grapple_cooldown_timer.start(grapple_cooldown_time)
+  
+func weapon_steal():
+  if grapple_cast.get_collider().weapon_node == null: return
+  #var weapon_node:weapon_manager = grapple_cast.get_collider().weapon_node
+  
+  #if weapon_node: print(weapon_node.current_weapon)
 
 func wallrun_juice():
-  if is_on_wall: camera.rotation = Vector3(wallrun_tilt_angle, 0, wallrun_tilt_angle) * wall_normal
+  if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
+  
   
 func crouch_char(is_crouched:bool = true):
   if is_crouched: scale.y = 0.5

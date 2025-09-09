@@ -2,7 +2,7 @@ extends Node3D
 class_name weapon_base
 
 var weapon_name:String
-@export var weapon_type:WeaponManager
+#@export var current_weapon_type:WeaponManager
 @export var damage:int
 @export var is_full_auto:bool
 
@@ -16,6 +16,10 @@ enum projectile_types { hit_scan, projectile }
 
 @export var total_ammo:int
 @export var current_ammo:int
+
+func _ready() -> void:
+  #weapon_name = str(current_weapon_type) # I don't think that's how this works, but you get the idea
+  pass
 
 func set_full_ammo():
   current_ammo = total_ammo
