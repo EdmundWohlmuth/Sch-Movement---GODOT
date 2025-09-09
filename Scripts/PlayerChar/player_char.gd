@@ -133,10 +133,12 @@ func on_wall_check():
   if wallrun_shape_cast.is_colliding() && !is_on_wall && !is_on_ceiling():
     is_on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
+    ground_deccel = 0
     wallrun_juice()
   elif !wallrun_shape_cast.is_colliding() && is_on_wall:
     is_on_wall = false
     wall_normal = Vector3.ZERO
+    ground_deccel = norm_deccel
     wallrun_juice()
 
 # Gets the desired speed of the character
@@ -150,14 +152,18 @@ func get_movement_speed() -> float:
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
+  if is_on_wall: return ##
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   if !is_on_wall:
     direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
   elif is_on_wall:
-    direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-    #direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-    #var cross = direction.cross(wall_normal)
-    #direction = cross
+    var up_vector:Vector3 = Vector3.UP
+    var wall_forward:Vector3 = up_vector.cross(wall_normal)
+    
+    if (head.transform.basis - wall_forward).magnitude > (head.transform.basis - -wall_forward).magnitude: 
+      wall_forward = -wall_forward
+    
+    direction = (head.transform.basis * wall_forward).normalized()
 
 # This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
@@ -181,23 +187,17 @@ func handle_air_strafe(delta):
   self.velocity += air_accel * direction * delta
 
 # keeps the player moving toward the wall to allow wallrunning
-func press_to_wall(delta):
-  var up_vector:Vector3 = Vector3.UP
-  var wall_forward = up_vector.cross(wall_normal)
-  var direction = -self.basis.z
-  
-  if ((direction - wall_forward).length() > (direction - -wall_forward).length()): wall_forward = -wall_forward
-  self.velocity += wall_normal * 2 * delta
-  self.velocity += wall_forward * 2 * delta
+func press_to_wall(delta):  
+  self.velocity += wall_normal * 8 * delta
 
 # reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide(delta):
   if Input.is_action_just_pressed("slide") && !is_sliding:
     is_sliding = true
     crouch_char()
-    ground_deccel = slide_deccel
     velocity += slide_speed_boost * direction
     max(self.velocity.length(), ground_deccel)
+    
     
   elif Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
@@ -248,7 +248,6 @@ func weapon_steal():
 func wallrun_juice():
   if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
-  
   
 func crouch_char(is_crouched:bool = true):
   if is_crouched: scale.y = 0.5

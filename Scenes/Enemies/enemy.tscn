@@ -18,4 +18,3 @@ shape = SubResource("CapsuleShape3D_3pdns")
 mesh = SubResource("CapsuleMesh_613su")
 
 [node name="WeaponManager" parent="." instance=ExtResource("2_jcvw6")]
-is_player = false
