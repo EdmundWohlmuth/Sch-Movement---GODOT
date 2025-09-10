@@ -134,12 +134,12 @@ func on_wall_check():
     is_on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
     ground_deccel = 0
-    wallrun_juice()
+    #wallrun_juice()
   elif !wallrun_shape_cast.is_colliding() && is_on_wall:
     is_on_wall = false
     wall_normal = Vector3.ZERO
     ground_deccel = norm_deccel
-    wallrun_juice()
+    #wallrun_juice()
 
 # Gets the desired speed of the character
 func get_movement_speed() -> float:
@@ -240,10 +240,10 @@ func grapple_end():
   grapple_cooldown_timer.start(grapple_cooldown_time)
   
 func weapon_steal():
-  if grapple_cast.get_collider().weapon_node == null: return
-  #var weapon_node:weapon_manager = grapple_cast.get_collider().weapon_node
+  var cast_target = grapple_cast.get_collider()
   
-  #if weapon_node: print(weapon_node.current_weapon)
+  print(str(cast_target))
+
 
 func wallrun_juice():
   if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))

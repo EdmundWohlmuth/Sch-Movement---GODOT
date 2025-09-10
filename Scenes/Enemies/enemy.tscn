@@ -7,9 +7,10 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_613su"]
 
-[node name="EnemyBody" type="CharacterBody3D"]
+[node name="EnemyBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager")]
 collision_layer = 2
 script = ExtResource("1_613su")
+weapon_manager = NodePath("WeaponManager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_3pdns")
@@ -17,4 +18,5 @@ shape = SubResource("CapsuleShape3D_3pdns")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_613su")
 
-[node name="WeaponManager" parent="." instance=ExtResource("2_jcvw6")]
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_jcvw6")]
+controller = NodePath("..")
