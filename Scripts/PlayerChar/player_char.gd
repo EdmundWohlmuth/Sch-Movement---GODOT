@@ -95,6 +95,19 @@ func _physics_process(delta):
   
   if Input.is_action_pressed("grapple") && can_grapple && is_grappling: grapple_pull(delta)
   elif Input.is_action_just_released("grapple") && is_grappling: grapple_end()
+  
+  # set crosshair stuff
+  if grapple_cast.is_colliding() && can_grapple: 
+    SignalManager.emit_signal("send_dist_info", grapple_point.distance_to(self.position))
+    if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
+    else: SignalManager.emit_signal("update_crosshair", 2)
+  elif grapple_cast.is_colliding() && can_grapple: 
+    SignalManager.emit_signal("update_crosshair", 3)
+  else: 
+    SignalManager.emit_signal("out_of_range_text")
+    if can_grapple: SignalManager.emit_signal("update_crosshair", 0)
+    else: SignalManager.emit_signal("update_crosshair", 3)
+
     
   handle_jump()
   #juice()
@@ -216,7 +229,6 @@ func set_grapple():
     var grapple_dir = (grapple_point - self.position).normalized()
     var grapple_target_speed = grapple_dir * grapple_speed
 
-  
     is_grappling = true
 
 # determines what function is played when the grapple connects with a collision
