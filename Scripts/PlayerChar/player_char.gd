@@ -98,7 +98,7 @@ func _physics_process(delta):
   
   # set crosshair stuff
   if grapple_cast.is_colliding() && can_grapple: 
-    SignalManager.emit_signal("send_dist_info", grapple_point.distance_to(self.position))
+    SignalManager.emit_signal("send_dist_info", self.position.distance_to(grapple_cast.get_collision_point()))
     if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
     else: SignalManager.emit_signal("update_crosshair", 2)
   elif grapple_cast.is_colliding() && can_grapple: 
