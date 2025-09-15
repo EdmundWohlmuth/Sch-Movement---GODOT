@@ -16,12 +16,19 @@ enum weapons
 }
 
 @export var current_weapon:weapons
-@export var is_player:bool
+@export var is_player:bool = false
+var node_owner:CharacterBody3D
 
 func _ready() -> void:
   pass
   
-func set_weapon() -> void:
-  #if is_player:
-  pass
+func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
+  current_weapon = weapon
+  
+  if is_player:
+    print("new gun")
+  elif !is_player && is_stolen:
+    print("my gun!")
+  elif !is_player && !is_stolen:
+    print("rearmed!")
   

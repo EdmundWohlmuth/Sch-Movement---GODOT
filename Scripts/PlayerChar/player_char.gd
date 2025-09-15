@@ -59,11 +59,16 @@ var wallrun_tilt_angle:float = 25
 @onready var coyote_timer = $CoyoteTimer
 @onready var slide_cooldown_timer = $SlideCooldownTimer
 
+#NODES
+@onready var weapon_manager:weapon_node = $WeaponManager
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
   Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+  weapon_manager.is_player = true
+  weapon_manager.node_owner = self
 
 # Handles the mouse looking
 func _input(event):
@@ -96,17 +101,7 @@ func _physics_process(delta):
   if Input.is_action_pressed("grapple") && can_grapple && is_grappling: grapple_pull(delta)
   elif Input.is_action_just_released("grapple") && is_grappling: grapple_end()
   
-  # set crosshair stuff
-  if grapple_cast.is_colliding() && can_grapple: 
-    SignalManager.emit_signal("send_dist_info", self.position.distance_to(grapple_cast.get_collision_point()))
-    if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
-    else: SignalManager.emit_signal("update_crosshair", 2)
-  elif grapple_cast.is_colliding() && can_grapple: 
-    SignalManager.emit_signal("update_crosshair", 3)
-  else: 
-    SignalManager.emit_signal("out_of_range_text")
-    if can_grapple: SignalManager.emit_signal("update_crosshair", 0)
-    else: SignalManager.emit_signal("update_crosshair", 3)
+  set_crosshair_juice()
 
     
   handle_jump()
@@ -231,6 +226,19 @@ func set_grapple():
 
     is_grappling = true
 
+# Emit signal to UI for crosshair colors and juice
+func set_crosshair_juice():
+  if grapple_cast.is_colliding() && can_grapple: 
+    SignalManager.emit_signal("send_dist_info", self.position.distance_to(grapple_cast.get_collision_point()))
+    if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
+    else: SignalManager.emit_signal("update_crosshair", 1)
+  elif grapple_cast.is_colliding() && can_grapple: 
+    SignalManager.emit_signal("update_crosshair", 3)
+  else: 
+    SignalManager.emit_signal("out_of_range_text")
+    if can_grapple: SignalManager.emit_signal("update_crosshair", 0)
+    else: SignalManager.emit_signal("update_crosshair", 3)
+
 # determines what function is played when the grapple connects with a collision
 func check_grapple_type():
     if !grapple_cast.is_colliding(): return
@@ -253,9 +261,8 @@ func grapple_end():
   
 func weapon_steal():
   var cast_target = grapple_cast.get_collider()
-  
-  print(str(cast_target))
-
+  weapon_manager.set_weapon(cast_target.weapon_manager.current_weapon)
+  cast_target.weapon_manager.set_weapon(weapon_manager.weapons.MELEE, true)
 
 func wallrun_juice():
   if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))

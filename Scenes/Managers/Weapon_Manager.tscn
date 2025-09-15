@@ -5,6 +5,8 @@
 
 [node name="WeaponManager" type="Node3D"]
 script = ExtResource("1_2c3qj")
+current_weapon = null
+is_player = null
 
 [node name="Node" type="Node" parent="."]
 

@@ -14,14 +14,18 @@ enemy_color = Color(1, 0, 0, 1)
 in_range_color = Color(0, 0.831373, 0.243137, 1)
 grapple_recharge_color = Color(1, 1, 0, 1)
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 2
-offset_left = 540.0
-offset_top = 324.0
-offset_right = 550.0
-offset_bottom = 334.0
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect"]
+[node name="ColorRect" type="ColorRect" parent="AspectRatioContainer"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AspectRatioContainer/ColorRect"]
 layout_mode = 2
 offset_left = 10.0
 offset_right = 75.0
@@ -34,11 +38,6 @@ theme_override_font_sizes/bold_font_size = 0
 text = "25m"
 fit_content = true
 scroll_active = false
-
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
 
 [node name="WeaponLabel" type="Label" parent="."]
 layout_mode = 0

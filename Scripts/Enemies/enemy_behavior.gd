@@ -4,9 +4,10 @@ const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
 @export var weapon_manager:weapon_node
+var current_weapon:weapon_base
 
 func _ready() -> void:
-  pass
+  weapon_manager.node_owner = self
 
 func _physics_process(delta: float) -> void:
   # Add the gravity.
