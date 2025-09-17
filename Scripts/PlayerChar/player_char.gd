@@ -90,7 +90,7 @@ func _physics_process(delta):
     
     if !is_on_wall:
       crouch_slide(delta)
-      #slope_stick(delta) 
+      #slope_stick(delta) # messes with on floor detection
     
     handle_movement(delta)
   elif !is_on_floor() || !is_on_wall:
