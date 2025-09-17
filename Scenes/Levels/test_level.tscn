@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dtb1e7t0ows0j"]
+[gd_scene load_steps=6 format=3 uid="uid://dtb1e7t0ows0j"]
 
 [ext_resource type="PackedScene" uid="uid://dchu2h8g3tulp" path="res://Scenes/UI/Gameplay UI.tscn" id="1_8sekd"]
 [ext_resource type="Material" uid="uid://cbkyu3m6ymch0" path="res://Mats/TestGray.tres" id="1_8yeky"]
@@ -6,130 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://d12tyfkvb4luu" path="res://Scenes/Player/player_char.tscn" id="3_tr2c4"]
 [ext_resource type="PackedScene" uid="uid://cdg7loubbna3d" path="res://Scenes/Enemies/enemy.tscn" id="4_npfmg"]
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_2sfa5"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_wxbyk"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_sq151"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_i1qcp"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_db73o"]
-friction = 0.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_23u5w"]
-height = 0.800478
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_pwcqi"]
-
 [node name="TestLevel" type="Node3D"]
 
 [node name="GameplayUi" parent="." instance=ExtResource("1_8sekd")]
-
-[node name="Floor" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
-shape = SubResource("WorldBoundaryShape3D_2sfa5")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(200, 0, 0, 0, 200, 0, 0, 0, 200, 0, 0, 0)
-material_override = ExtResource("1_8yeky")
-mesh = SubResource("PlaneMesh_wxbyk")
-
-[node name="Box" type="StaticBody3D" parent="."]
-transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, -11, 7, 11)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box2" type="StaticBody3D" parent="."]
-transform = Transform3D(25, 0, 0, 0, 10, 0, 0, 0, 5, 2, 5, -15)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box2"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box2"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box3" type="StaticBody3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 11, 2.51491, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box3"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box3"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box4" type="StaticBody3D" parent="."]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 18, -8, 7, -5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.333333, 0)
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.333333, 0)
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box5" type="StaticBody3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 11, 17.5149, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box5"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box5"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box6" type="StaticBody3D" parent="."]
-transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 2, 12, -35)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box6"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box6"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box8" type="StaticBody3D" parent="."]
-transform = Transform3D(37.2001, -14.0673, 0, 25.321, 20.6666, 0, 0, 0, 25, -22.1143, 1.52103, -35)
-physics_material_override = SubResource("PhysicsMaterial_db73o")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box8"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box8"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Box7" type="StaticBody3D" parent="."]
-transform = Transform3D(15, 0, 0, 0, 25, 0, 0, 0, 200, 63, 12, 11)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box7"]
-shape = SubResource("BoxShape3D_sq151")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box7"]
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("BoxMesh_i1qcp")
-
-[node name="Cylindar1" type="StaticBody3D" parent="."]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, -25, 19.5149, 11.2379)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylindar1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0)
-shape = SubResource("CylinderShape3D_23u5w")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cylindar1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.25, 0)
-material_override = ExtResource("2_dksy8")
-mesh = SubResource("CylinderMesh_pwcqi")
 
 [node name="PlayerCharacterBody" parent="." instance=ExtResource("3_tr2c4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -141,3 +20,76 @@ shadow_blur = 0.0
 
 [node name="EnemyBody" parent="." instance=ExtResource("4_npfmg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.715223, 1, -8.45727)
+
+[node name="WORLD_MESH" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(0.999996, -0.00245766, 0.00102346, 0.00245869, 0.999997, -0.00100164, -0.00102099, 0.00100415, 0.999999, -2.49885, -0.470545, 0.00208612)
+material_override = ExtResource("1_8yeky")
+calculate_tangents = false
+use_collision = true
+collision_priority = 20.0
+size = Vector3(500, 0.971191, 500)
+metadata/_edit_lock_ = true
+
+[node name="CSGBox1" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.55692, -26.141)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(25, 15, 25)
+
+[node name="CSGBox2" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 12.5569, 1.85902)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 25, 96)
+
+[node name="CSGBox3" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 10.0227, 41.859)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 20, 15)
+
+[node name="CSGBox4" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 18.5227, 41.859)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(13, 3, 9)
+
+[node name="CSGBox6" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.52269, 13.859)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(13, 3, 9)
+
+[node name="CSGBox8" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 4.52269, 11.359)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(4, 3, 4)
+
+[node name="CSGBox9" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 11.0227, 10.359)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
+[node name="CSGBox7" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8.0146, 1.52269, 2.87422)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(13, 3, 9)
+
+[node name="CSGBox5" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5146, 11.5227, 41.3742)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(2, 11, 2)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, 41.8737)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+radius = 10.0
+height = 10.0
+sides = 64

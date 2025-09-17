@@ -69,6 +69,7 @@ func _ready():
   Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
   weapon_manager.is_player = true
   weapon_manager.node_owner = self
+  up_direction = Vector3.UP
 
 # Handles the mouse looking
 func _input(event):
@@ -85,11 +86,11 @@ func _physics_process(delta):
   if is_on_floor() || is_on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
-    if wallrun_shape_cast.is_colliding(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHENNOT MOVING
+    if wallrun_shape_cast.is_colliding(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
     
     if !is_on_wall:
       crouch_slide(delta)
-      slope_stick(delta) 
+      #slope_stick(delta) 
     
     handle_movement(delta)
   elif !is_on_floor() || !is_on_wall:
@@ -102,7 +103,6 @@ func _physics_process(delta):
   elif Input.is_action_just_released("grapple") && is_grappling: grapple_end()
   
   set_crosshair_juice()
-
     
   handle_jump()
   #juice()
@@ -261,6 +261,8 @@ func grapple_end():
   
 func weapon_steal():
   var cast_target = grapple_cast.get_collider()
+  if cast_target.weapon_manager.current_weapon == weapon_manager.weapons.MELEE: return #or pull
+  
   weapon_manager.set_weapon(cast_target.weapon_manager.current_weapon)
   cast_target.weapon_manager.set_weapon(weapon_manager.weapons.MELEE, true)
 

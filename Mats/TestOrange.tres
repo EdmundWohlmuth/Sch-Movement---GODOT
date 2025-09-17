@@ -1,4 +1,9 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://btowfidmpjejc"]
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://btowfidmpjejc"]
+
+[ext_resource type="Texture2D" uid="uid://3txnqik40jog" path="res://Textures/Temp tex/kenney_prototype_textures/orange/texture_01.png" id="1_ggpro"]
 
 [resource]
-albedo_color = Color(1, 0.470588, 0, 1)
+albedo_texture = ExtResource("1_ggpro")
+uv1_scale = Vector3(0.465, 0.465, 0.465)
+uv1_triplanar = true
+uv1_world_triplanar = true
