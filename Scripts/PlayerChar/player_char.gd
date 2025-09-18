@@ -43,7 +43,7 @@ var ground_normal:Vector3 = Vector3.ZERO
 var is_sliding:bool = false
 var is_on_wall:bool = false
 var is_grappling:bool = false
-var is_crouched:bool = false
+#var is_crouched:bool = false
 
 # === juice === #
 var wallrun_tilt_angle:float = 25
@@ -69,6 +69,7 @@ func _ready():
   Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
   weapon_manager.is_player = true
   weapon_manager.node_owner = self
+  weapon_manager.is_player = true
   up_direction = Vector3.UP
 
 # Handles the mouse looking
@@ -90,7 +91,6 @@ func _physics_process(delta):
     
     if !is_on_wall:
       crouch_slide(delta)
-      #slope_stick(delta) # messes with on floor detection
     
     handle_movement(delta)
   elif !is_on_floor() || !is_on_wall:
@@ -117,16 +117,6 @@ func apply_gravity(delta):
   if !is_on_floor() && !is_on_wall:
     if velocity.y < 0: velocity.y -= (fall_acceleration + gravity) * delta
     else: velocity.y -= gravity * delta
-    
-# Allows players to slide down slodes
-func slope_stick(delta):
-  var _normal = grounding_ray.get_collision_normal()
-  if _normal.y == 1.0: 
-    up_direction = Vector3.UP
-    return # don't need to stick if surface is flat
-  up_direction = _normal
-  self.velocity += _normal * 10 * delta
-  #var transform:Transform3D = global_transform
     
 # Handles jump input and physics
 func handle_jump():
@@ -160,18 +150,10 @@ func get_movement_speed() -> float:
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
-  if is_on_wall: return ##
+  #if is_on_wall: return ##
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
-  if !is_on_wall:
-    direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-  elif is_on_wall:
-    var up_vector:Vector3 = Vector3.UP
-    var wall_forward:Vector3 = up_vector.cross(wall_normal)
-    
-    if (head.transform.basis - wall_forward).magnitude > (head.transform.basis - -wall_forward).magnitude: 
-      wall_forward = -wall_forward
-    
-    direction = (head.transform.basis * wall_forward).normalized()
+  direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+
 
 # This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
@@ -196,10 +178,10 @@ func handle_air_strafe(delta):
 
 # keeps the player moving toward the wall to allow wallrunning
 func press_to_wall(delta):  
-  self.velocity += wall_normal * 8 * delta
+  self.velocity -= wall_normal * max_wall_speed * delta
 
 # reduces the size of the player and grants a small speed boost with high friction 
-func crouch_slide(delta):
+func crouch_slide(_delta):
   if Input.is_action_just_pressed("slide") && !is_sliding:
     is_sliding = true
     crouch_char()
@@ -221,8 +203,6 @@ func ground_pound(delta):
 func set_grapple():
   if grapple_cast.is_colliding():
     grapple_point = grapple_cast.get_collision_point()
-    var grapple_dir = (grapple_point - self.position).normalized()
-    var grapple_target_speed = grapple_dir * grapple_speed
 
     is_grappling = true
 
@@ -270,8 +250,8 @@ func wallrun_juice():
   if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
   
-func crouch_char(is_crouched:bool = true):
-  if is_crouched: scale.y = 0.5
+func crouch_char(_is_crouched:bool = true):
+  if _is_crouched: scale.y = 0.5
   else: scale.y = 1
 
 # === timers === #

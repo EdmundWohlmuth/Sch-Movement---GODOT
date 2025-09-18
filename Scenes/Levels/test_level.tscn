@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtb1e7t0ows0j"]
+[gd_scene load_steps=7 format=3 uid="uid://dtb1e7t0ows0j"]
 
 [ext_resource type="PackedScene" uid="uid://dchu2h8g3tulp" path="res://Scenes/UI/Gameplay UI.tscn" id="1_8sekd"]
 [ext_resource type="Material" uid="uid://cbkyu3m6ymch0" path="res://Mats/TestGray.tres" id="1_8yeky"]
 [ext_resource type="Material" uid="uid://btowfidmpjejc" path="res://Mats/TestOrange.tres" id="2_dksy8"]
 [ext_resource type="PackedScene" uid="uid://d12tyfkvb4luu" path="res://Scenes/Player/player_char.tscn" id="3_tr2c4"]
 [ext_resource type="PackedScene" uid="uid://cdg7loubbna3d" path="res://Scenes/Enemies/enemy.tscn" id="4_npfmg"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_npfmg"]
 
 [node name="TestLevel" type="Node3D"]
 
@@ -33,13 +35,13 @@ size = Vector3(500, 0.971191, 500)
 metadata/_edit_lock_ = true
 
 [node name="CSGBox1" type="CSGBox3D" parent="WORLD_MESH"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.55692, -26.141)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.42389, -26.141)
 material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(25, 15, 25)
 
 [node name="CSGBox2" type="CSGBox3D" parent="WORLD_MESH"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 12.5569, 1.85902)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 12.5569, 1.85902)
 material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(15, 25, 96)
@@ -93,3 +95,9 @@ use_collision = true
 radius = 10.0
 height = 10.0
 sides = 64
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="WORLD_MESH"]
+transform = Transform3D(29.9437, 8.02339, 0, -8.02339, 29.9437, 0, 0, 0, 31, -16.509, 0, -28.7622)
+use_collision = true
+mesh = SubResource("PrismMesh_npfmg")
+material = ExtResource("2_dksy8")
