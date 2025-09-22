@@ -12,6 +12,7 @@ var weapon_name:String
 @export var current_projectile_spread:float
 @export var max_projectile_spread:float
 enum projectile_types { hit_scan, projectile }
+
 @export var projectile_type:projectile_types
 
 @export var total_ammo:int

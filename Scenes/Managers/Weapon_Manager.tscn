@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://d30e074jp6nms"]
+[gd_scene load_steps=2 format=3 uid="uid://d30e074jp6nms"]
 
 [ext_resource type="Script" uid="uid://dlb6sr6jcxqn8" path="res://Scripts/Managers/WeaponManager.gd" id="1_2c3qj"]
-[ext_resource type="PackedScene" uid="uid://dhjqed7cdv48m" path="res://Weapon Resources/rifle.tscn" id="2_ktaw7"]
 
 [node name="WeaponManager" type="Node3D"]
 script = ExtResource("1_2c3qj")
 
+<<<<<<< Updated upstream
 [node name="Node" type="Node" parent="."]
 
 [node name="Node2" type="Node" parent="."]
@@ -21,3 +21,6 @@ script = ExtResource("1_2c3qj")
 [node name="Node6" type="Node" parent="."]
 
 [node name="Node7" type="Node" parent="."]
+=======
+[node name="FirerateTimer" type="Timer" parent="."]
+>>>>>>> Stashed changes
