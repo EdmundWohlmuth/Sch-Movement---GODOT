@@ -6,6 +6,8 @@
 [node name="WeaponManager" type="Node3D"]
 script = ExtResource("1_2c3qj")
 
+[node name="FirerateTimer" type="Timer" parent="."]
+
 [node name="Node" type="Node" parent="."]
 
 [node name="Node2" type="Node" parent="."]

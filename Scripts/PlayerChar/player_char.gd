@@ -46,7 +46,7 @@ var is_grappling:bool = false
 #var is_crouched:bool = false
 
 # === juice === #
-var wallrun_tilt_angle:float = 25
+var wallrun_tilt_angle:float = 10
 
 # === raycasts === #
 @onready var grapple_cast = $Head/Camera3D/RayCast3D
@@ -132,12 +132,12 @@ func on_wall_check():
     is_on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
     ground_deccel = 0
-    #wallrun_juice()
+    wallrun_juice()
   elif !wallrun_shape_cast.is_colliding() && is_on_wall:
     is_on_wall = false
     wall_normal = Vector3.ZERO
     ground_deccel = norm_deccel
-    #wallrun_juice()
+    wallrun_juice()
 
 # Gets the desired speed of the character
 func get_movement_speed() -> float:
@@ -243,11 +243,19 @@ func weapon_steal():
   var cast_target = grapple_cast.get_collider()
   if cast_target.weapon_manager.current_weapon == weapon_manager.weapons.MELEE: return #or pull
   
-  weapon_manager.set_weapon(cast_target.weapon_manager.current_weapon)
-  cast_target.weapon_manager.set_weapon(weapon_manager.weapons.MELEE, true)
+  weapon_manager.change_weapon(cast_target.weapon_manager.current_weapon)
+  cast_target.weapon_manager.change_weapon(weapon_manager.weapons.MELEE, true)
 
+# Change the camera tilt based on the camera's rotation and the wall normal to determine to which side
 func wallrun_juice():
-  if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
+  if is_on_wall && !is_on_floor(): 
+    if wallrun_shape_cast.get_collision_normal(0).x > 0 || wallrun_shape_cast.get_collision_normal(0).z > 0:
+      if head.rotation.y < 0: camera.rotation_degrees.z = -wallrun_tilt_angle
+      else: camera.rotation_degrees.z = wallrun_tilt_angle
+    elif wallrun_shape_cast.get_collision_normal(0).x < 0 || wallrun_shape_cast.get_collision_normal(0).z < 0:
+      if head.rotation.y > 0: camera.rotation_degrees.z = -wallrun_tilt_angle
+      else: camera.rotation_degrees.z = wallrun_tilt_angle
+    
   else: camera.rotation = Vector3.ZERO
   
 func crouch_char(_is_crouched:bool = true):

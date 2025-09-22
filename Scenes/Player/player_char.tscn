@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://d12tyfkvb4luu"]
+[gd_scene load_steps=6 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
 [ext_resource type="PackedScene" uid="uid://d30e074jp6nms" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pfg0q"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_pfg0q"]
 height = 1.0
@@ -14,6 +16,16 @@ collision_layer = 4
 collision_mask = 3
 wall_min_slide_angle = 0.785398
 script = ExtResource("1_2bvri")
+
+[node name="LeftRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(-4.37047e-08, -4.29485e-08, -1, -0.999848, 0.0174524, 4.29485e-08, 0.0174524, 0.999848, -4.37047e-08, -0.5, 0.57, 0)
+target_position = Vector3(0, 0, 0.5)
+debug_shape_custom_color = Color(1, 0, 1, 1)
+
+[node name="RightRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1.31114e-07, 4.14228e-08, 1, 0.999848, -0.0174524, -1.30371e-07, 0.0174524, 0.999848, -4.37047e-08, 0.5, 0.57, 0)
+target_position = Vector3(0, 0, 0.5)
+debug_shape_custom_color = Color(1, 0, 1, 1)
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")
@@ -36,6 +48,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.466261)
 target_position = Vector3(0, 0, -25)
 collision_mask = 3
 debug_shape_custom_color = Color(1, 0, 1, 1)
+
+[node name="WeaponMeshHolder" type="MeshInstance3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.877834, -0.49521, -1.26814)
+visible = false
+mesh = SubResource("BoxMesh_pfg0q")
 
 [node name="WallRunShapeCast" type="ShapeCast3D" parent="."]
 transform = Transform3D(1.3, 0, 0, 0, 0.5, 0, 0, 0, 1.3, 0, 0.556993, 0)
