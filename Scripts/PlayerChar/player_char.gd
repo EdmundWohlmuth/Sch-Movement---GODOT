@@ -60,7 +60,7 @@ var wallrun_tilt_angle:float = 25
 @onready var slide_cooldown_timer = $SlideCooldownTimer
 
 #NODES
-@onready var weapon_manager:weapon_node = $WeaponManager
+@export var weapon_manager:weapon_node
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -68,7 +68,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
   Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
   weapon_manager.is_player = true
-  weapon_manager.node_owner = self
+  weapon_manager.controller = self
   up_direction = Vector3.UP
 
 # Handles the mouse looking
@@ -77,6 +77,8 @@ func _input(event):
     head.rotate_y(-event.relative.x * look_speed)
     camera.rotate_x(-event.relative.y * look_speed)
     camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(85))
+  
+  if Input.is_action_just_pressed("shoot"): weapon_manager.weapon_stats.on_shoot()
 
 func _physics_process(delta): 
   manage_input()
@@ -265,6 +267,7 @@ func weapon_steal():
   
   weapon_manager.set_weapon(cast_target.weapon_manager.current_weapon)
   cast_target.weapon_manager.set_weapon(weapon_manager.weapons.MELEE, true)
+  SignalManager.emit_signal("update_weapon_data", weapon_manager.weapon_stats.current_ammo, weapon_manager.weapon_stats.total_ammo, true)
 
 func wallrun_juice():
   if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))

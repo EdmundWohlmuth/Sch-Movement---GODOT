@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
-[ext_resource type="PackedScene" uid="uid://d30e074jp6nms" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
+[ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
 
@@ -9,13 +9,18 @@
 height = 1.0
 radius = 0.6
 
-[node name="PlayerCharacterBody" type="CharacterBody3D"]
+[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager")]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_2bvri")
+weapon_manager = NodePath("WeaponManager")
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")
+
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_pfg0q")]
+controller = NodePath("..")
+is_player = true
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
@@ -44,9 +49,6 @@ shape = SubResource("CylinderShape3D_pfg0q")
 transform = Transform3D(0.999848, -0.0174524, 7.62869e-10, 0, -4.37114e-08, -1, 0.0174524, 0.999848, -4.37047e-08, 0, -1, 0)
 target_position = Vector3(0, 0, 0.5)
 debug_shape_custom_color = Color(1, 0, 1, 1)
-
-[node name="WeaponManager" parent="." instance=ExtResource("2_pfg0q")]
-is_player = true
 
 [connection signal="timeout" from="SlideCooldownTimer" to="." method="_on_slide_cooldown_timer_timeout"]
 [connection signal="timeout" from="GrappleCooldownTimer" to="." method="_on_grapple_cooldown_timer_timeout"]
