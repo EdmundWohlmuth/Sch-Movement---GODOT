@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="weapon_base" load_steps=2 format=3 uid="uid://c60yms8n2v1xm"]
+
+[ext_resource type="Script" uid="uid://fxlpqkq3psv5" path="res://Weapon Resources/weapon_base.gd" id="1_ewvbm"]
+
+[resource]
+script = ExtResource("1_ewvbm")
+damage = 1
+is_full_auto = null
+projectile_num = 12
+shot_cooldown_time = 0.1
+base_projectile_spread = 15.0
+current_projectile_spread = 15.0
+max_projectile_spread = 25.0
+knock_back = null
+projectile_type = 0
+projectile_speed = null
+does_projectile_drop = null
+total_ammo = 2
+current_ammo = 2

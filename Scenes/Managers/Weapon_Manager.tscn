@@ -1,25 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d30e074jp6nms"]
+[gd_scene load_steps=2 format=3 uid="uid://ctlcautjqwklo"]
 
 [ext_resource type="Script" uid="uid://dlb6sr6jcxqn8" path="res://Scripts/Managers/WeaponManager.gd" id="1_2c3qj"]
-[ext_resource type="PackedScene" uid="uid://dhjqed7cdv48m" path="res://Weapon Resources/rifle.tscn" id="2_ktaw7"]
 
 [node name="WeaponManager" type="Node3D"]
 script = ExtResource("1_2c3qj")
 
-[node name="FirerateTimer" type="Timer" parent="."]
-
-[node name="Node" type="Node" parent="."]
-
-[node name="Node2" type="Node" parent="."]
-
-[node name="Node3" type="Node" parent="."]
-
-[node name="Node4" type="Node" parent="."]
-
-[node name="Rifle" parent="." instance=ExtResource("2_ktaw7")]
-
-[node name="Node5" type="Node" parent="."]
-
-[node name="Node6" type="Node" parent="."]
-
-[node name="Node7" type="Node" parent="."]
+[node name="Timer" type="Timer" parent="."]

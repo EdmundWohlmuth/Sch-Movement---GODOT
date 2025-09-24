@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="weapon_base" load_steps=2 format=3 uid="uid://cgbxqm4wlt1i7"]
+
+[ext_resource type="Script" uid="uid://fxlpqkq3psv5" path="res://Weapon Resources/weapon_base.gd" id="1_q33sx"]
+
+[resource]
+script = ExtResource("1_q33sx")
+damage = 10
+is_full_auto = null
+projectile_num = 1
+shot_cooldown_time = 1.25
+base_projectile_spread = null
+current_projectile_spread = null
+max_projectile_spread = null
+knock_back = 2.0
+projectile_type = 0
+projectile_speed = null
+does_projectile_drop = null
+total_ammo = 6
+current_ammo = 6
