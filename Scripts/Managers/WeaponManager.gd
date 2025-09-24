@@ -2,6 +2,7 @@ extends Node
 class_name weapon_node
 
 @export var controller:CharacterBody3D
+@onready var timer: Timer = $Timer
 
 enum weapons
 {
@@ -28,11 +29,12 @@ const ROCKET_LAUNCHER = preload("res://Weapon Resources/RocketLauncher.tres")
 const SMG = preload("res://Weapon Resources/SMG.tres")
 const AUTO_PISTOL = preload("res://Weapon Resources/AutoPistol.tres")
 
+var end_cooldown:Callable = Callable(enable_shoot)
+
 func _ready() -> void:
-  pass
+  timer.connect("timeout", end_cooldown)
   
 func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
-  current_weapon = weapon
   match weapon:
     weapons.MELEE: weapon_stats = MELEE
     weapons.AUTO_PISTOL: weapon_stats = AUTO_PISTOL
@@ -42,9 +44,12 @@ func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
     weapons.REPEATING_SHOTGUN: weapon_stats = REPEATING_SHOTGUN
     weapons.DB_SHOTGUN: weapon_stats = DB_SHOTGUN
     weapons.ROCKET_LAUNCHER: weapon_stats = ROCKET_LAUNCHER
+    
+  current_weapon = weapon
   
   if is_player:
     SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+    weapon_stats.can_shoot = true
   elif !is_player && is_stolen:
     print("my gun!")
   elif !is_player && !is_stolen:
@@ -55,3 +60,10 @@ func discard_weapon():
   # Drop 'weapon' with weapon type on it
   set_weapon(weapons.MELEE)
   
+func shoot():
+  if timer.is_stopped(): timer.start(weapon_stats.shot_cooldown_time)
+  weapon_stats.on_shoot()
+
+func enable_shoot():
+  weapon_stats.re_enable_shoot()
+  timer.stop()

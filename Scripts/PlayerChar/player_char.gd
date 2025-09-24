@@ -77,14 +77,21 @@ func _input(event):
     head.rotate_y(-event.relative.x * look_speed)
     camera.rotate_x(-event.relative.y * look_speed)
     camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(85))
-  
-  if Input.is_action_just_pressed("shoot"): weapon_manager.weapon_stats.on_shoot()
+    
 
 func _physics_process(delta): 
   manage_input()
   on_wall_check()
-  
-  # Apply ground movement
+  movement(delta)
+  grapple(delta)
+  handle_jump()
+  slide()
+  handle_attack()
+    
+  move_and_slide()
+
+# Apply ground movement
+func movement(delta):
   if is_on_floor() || is_on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
@@ -98,27 +105,32 @@ func _physics_process(delta):
   elif !is_on_floor() || !is_on_wall:
     handle_air_strafe(delta)
     apply_gravity(delta) # Add the gravity.
-   
+
+# handle grapple mechanic
+func grapple(delta):
   if Input.is_action_just_pressed("grapple") && can_grapple: check_grapple_type()
   
   if Input.is_action_pressed("grapple") && can_grapple && is_grappling: grapple_pull(delta)
   elif Input.is_action_just_released("grapple") && is_grappling: grapple_end()
   
   set_crosshair_juice()
-    
-  handle_jump()
-  #juice()
+
+func slide():
   if Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
     crouch_char(false)
     slide_cooldown_timer.start()
-    
-  move_and_slide()
 
 func apply_gravity(delta):
   if !is_on_floor() && !is_on_wall:
     if velocity.y < 0: velocity.y -= (fall_acceleration + gravity) * delta
     else: velocity.y -= gravity * delta
+    
+func handle_attack():    
+  if Input.is_action_pressed("shoot") && weapon_manager.weapon_stats.is_full_auto: 
+    weapon_manager.shoot()
+  elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto:
+    weapon_manager.shoot()  
     
 # Allows players to slide down slodes
 func slope_stick(delta):
