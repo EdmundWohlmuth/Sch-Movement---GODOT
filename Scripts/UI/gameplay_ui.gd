@@ -2,7 +2,7 @@ extends Control
 
 @onready var color_rect: ColorRect = $AspectRatioContainer/ColorRect
 @onready var dist_label: RichTextLabel = $AspectRatioContainer/ColorRect/RichTextLabel
-@onready var weapon_label:Label = $WeaponLabel
+@onready var weapon_label: Label = $VBoxContainer/WeaponLabel
 
 @export var out_of_range_color:Color
 @export var enemy_color:Color
