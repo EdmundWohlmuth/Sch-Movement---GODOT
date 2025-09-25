@@ -37,8 +37,9 @@ func on_shoot():
       print(str(current_ammo)) 
       SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, true)
       can_shoot = false
+      if current_ammo <= 0: on_no_ammo()
       
-    else: on_no_ammo()
+    elif current_ammo <= 0: on_no_ammo()
   
 func on_no_ammo():
   print("discard")

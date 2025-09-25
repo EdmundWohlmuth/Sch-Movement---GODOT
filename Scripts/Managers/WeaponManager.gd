@@ -32,6 +32,7 @@ const AUTO_PISTOL = preload("res://Weapon Resources/AutoPistol.tres")
 var end_cooldown:Callable = Callable(enable_shoot)
 
 func _ready() -> void:
+  set_weapon(current_weapon)
   timer.connect("timeout", end_cooldown)
   
 func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:

@@ -41,7 +41,7 @@ var wall_normal:Vector3 = Vector3.ZERO
 var ground_normal:Vector3 = Vector3.ZERO
 # === state bools === #
 var is_sliding:bool = false
-var is_on_wall:bool = false
+var on_wall:bool = false
 var is_grappling:bool = false
 var is_crouched:bool = false
 
@@ -92,17 +92,17 @@ func _physics_process(delta):
 
 # Apply ground movement
 func movement(delta):
-  if is_on_floor() || is_on_wall: 
+  if is_on_floor() || on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
     if wallrun_shape_cast.is_colliding(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
     
-    if !is_on_wall:
-      crouch_slide(delta)
+    if !on_wall:
+      crouch_slide()
       #slope_stick(delta) # messes with on floor detection
     
     handle_movement(delta)
-  elif !is_on_floor() || !is_on_wall:
+  elif !is_on_floor() || !on_wall:
     handle_air_strafe(delta)
     apply_gravity(delta) # Add the gravity.
 
@@ -122,15 +122,17 @@ func slide():
     slide_cooldown_timer.start()
 
 func apply_gravity(delta):
-  if !is_on_floor() && !is_on_wall:
+  if !is_on_floor() && !on_wall:
     if velocity.y < 0: velocity.y -= (fall_acceleration + gravity) * delta
     else: velocity.y -= gravity * delta
     
 func handle_attack():    
-  if Input.is_action_pressed("shoot") && weapon_manager.weapon_stats.is_full_auto: 
+  if Input.is_action_pressed("shoot") && weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0: 
     weapon_manager.shoot()
-  elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto:
-    weapon_manager.shoot()  
+    weapon_knockback()
+  elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0:
+    weapon_manager.shoot() 
+    weapon_knockback()
     
 # Allows players to slide down slodes
 func slope_stick(delta):
@@ -147,38 +149,38 @@ func handle_jump():
   if Input.is_action_just_pressed("jump") && available_jumps > 0 && is_on_floor():
     available_jumps -= 1
     velocity.y += jump_velocity
-  elif Input.is_action_just_pressed("jump") && is_on_wall:
+  elif Input.is_action_just_pressed("jump") && on_wall:
     velocity += wall_normal * jump_velocity
     velocity.y += jump_velocity
 
 func on_wall_check():
-  if wallrun_shape_cast.is_colliding() && !is_on_wall && !is_on_ceiling():
-    is_on_wall = true
+  if wallrun_shape_cast.is_colliding() && !on_wall && !is_on_ceiling():
+    on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
     ground_deccel = 0
     #wallrun_juice()
-  elif !wallrun_shape_cast.is_colliding() && is_on_wall:
-    is_on_wall = false
+  elif !wallrun_shape_cast.is_colliding() && on_wall:
+    on_wall = false
     wall_normal = Vector3.ZERO
     ground_deccel = norm_deccel
     #wallrun_juice()
 
 # Gets the desired speed of the character
 func get_movement_speed() -> float:
-  if Input.is_action_pressed("sprint") && (is_on_floor() || is_on_wall): 
+  if Input.is_action_pressed("sprint") && (is_on_floor() || on_wall): 
     return max_sprint_speed
-  elif !Input.is_action_pressed("sprint") && (is_on_floor() || is_on_wall): 
+  elif !Input.is_action_pressed("sprint") && (is_on_floor() || on_wall): 
     #current_move_speed = lerp(sprint_speed, move_speed, 0.5)
     return max_run_speed
   else: return max_run_speed
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
-  if is_on_wall: return ##
+  if on_wall: return ##
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
-  if !is_on_wall:
+  if !on_wall:
     direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-  elif is_on_wall:
+  elif on_wall:
     var up_vector:Vector3 = Vector3.UP
     var wall_forward:Vector3 = up_vector.cross(wall_normal)
     
@@ -213,7 +215,7 @@ func press_to_wall(delta):
   self.velocity += wall_normal * 8 * delta
 
 # reduces the size of the player and grants a small speed boost with high friction 
-func crouch_slide(delta):
+func crouch_slide():
   if Input.is_action_just_pressed("slide") && !is_sliding:
     is_sliding = true
     crouch_char()
@@ -227,7 +229,7 @@ func crouch_slide(delta):
     slide_cooldown_timer.start()
 
 # kills a lot of x / z momentum and drastically increases downward momentum
-func ground_pound(delta):
+func ground_pound():
   if Input.is_action_just_pressed("slide") && !is_sliding && !is_on_floor():
     pass # change for special movement
 
@@ -236,7 +238,7 @@ func set_grapple():
   if grapple_cast.is_colliding():
     grapple_point = grapple_cast.get_collision_point()
     var grapple_dir = (grapple_point - self.position).normalized()
-    var grapple_target_speed = grapple_dir * grapple_speed
+    var _grapple_target_speed = grapple_dir * grapple_speed
 
     is_grappling = true
 
@@ -282,12 +284,19 @@ func weapon_steal():
   SignalManager.emit_signal("update_weapon_data", weapon_manager.weapon_stats.current_ammo, weapon_manager.weapon_stats.total_ammo, true)
 
 func wallrun_juice():
-  if is_on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
+  if on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
   
 func crouch_char(is_crouched:bool = true):
   if is_crouched: scale.y = 0.5
   else: scale.y = 1
+
+# Change velocity based on weapon knockback
+func weapon_knockback():
+  # only knockback while airborne
+  if weapon_manager.weapon_stats.knock_back <= 0 || (is_on_floor() || is_on_wall()): return
+  velocity += camera.get_global_transform().basis.z * weapon_manager.weapon_stats.knock_back
+  
 
 # === timers === #
 func _on_slide_cooldown_timer_timeout():
