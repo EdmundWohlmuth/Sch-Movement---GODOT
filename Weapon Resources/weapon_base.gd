@@ -5,17 +5,15 @@ var weapon_name:String
 @export var damage:int
 @export var is_full_auto:bool
 
-@export var projectile_num:int
+@export var bullet_num:int
 @export var shot_cooldown_time:float
-@export var base_projectile_spread:float
-@export var current_projectile_spread:float
-@export var max_projectile_spread:float
+@export var base_bullet_spread:float
+@export var current_bullet_spread:float
+@export var max_bullet_spread:float
 @export var knock_back:float
 enum projectile_types { hit_scan, projectile, melee}
 
 @export var projectile_type:projectile_types
-@export var projectile_speed:float
-@export var does_projectile_drop:bool
 
 @export var total_ammo:int
 @export var current_ammo:int
@@ -34,16 +32,17 @@ func on_shoot():
   if projectile_type != projectile_types.melee: 
     if current_ammo > 0: 
       current_ammo -= 1
-      print(str(current_ammo)) 
       SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, true)
       can_shoot = false
       if current_ammo <= 0: on_no_ammo()
       
     elif current_ammo <= 0: on_no_ammo()
   
+# if player loose the gun, else wait for reload
 func on_no_ammo():
   print("discard")
   SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, false)
 
+# allow weapon to fire again
 func re_enable_shoot():
   can_shoot = true

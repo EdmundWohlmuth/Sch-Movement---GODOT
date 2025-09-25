@@ -296,7 +296,6 @@ func weapon_knockback():
   # only knockback while airborne
   if weapon_manager.weapon_stats.knock_back <= 0 || (is_on_floor() || is_on_wall()): return
   velocity += camera.get_global_transform().basis.z * weapon_manager.weapon_stats.knock_back
-  
 
 # === timers === #
 func _on_slide_cooldown_timer_timeout():

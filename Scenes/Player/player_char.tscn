@@ -18,16 +18,6 @@ wall_min_slide_angle = 0.785398
 script = ExtResource("1_2bvri")
 weapon_manager = NodePath("WeaponManager")
 
-[node name="LeftRayCast" type="RayCast3D" parent="."]
-transform = Transform3D(-4.37047e-08, -4.29485e-08, -1, -0.999848, 0.0174524, 4.29485e-08, 0.0174524, 0.999848, -4.37047e-08, -0.5, 0.57, 0)
-target_position = Vector3(0, 0, 0.5)
-debug_shape_custom_color = Color(1, 0, 1, 1)
-
-[node name="RightRayCast" type="RayCast3D" parent="."]
-transform = Transform3D(1.31114e-07, 4.14228e-08, 1, 0.999848, -0.0174524, -1.30371e-07, 0.0174524, 0.999848, -4.37047e-08, 0.5, 0.57, 0)
-target_position = Vector3(0, 0, 0.5)
-debug_shape_custom_color = Color(1, 0, 1, 1)
-
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")
 
