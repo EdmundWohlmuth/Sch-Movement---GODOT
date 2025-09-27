@@ -22,6 +22,15 @@ shadow_blur = 0.0
 
 [node name="EnemyBody" parent="." instance=ExtResource("4_npfmg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.715223, 1, -8.45727)
+weapon = 8
+
+[node name="EnemyBody2" parent="." instance=ExtResource("4_npfmg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.71522, 1, -8.45727)
+weapon = 4
+
+[node name="EnemyBody3" parent="." instance=ExtResource("4_npfmg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7152, 1, -8.45727)
+weapon = 5
 
 [node name="WORLD_MESH" type="Node3D" parent="."]
 
