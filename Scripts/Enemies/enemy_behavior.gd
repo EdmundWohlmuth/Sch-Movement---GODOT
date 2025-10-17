@@ -8,6 +8,10 @@ var current_weapon:weapon_base
 
 @export var weapon:weapon_node.weapons
 
+# ==== NODES ==== #
+@onready var health: health_node = $Health
+@onready var hurt_box: hurtbox_node = $hurt_box
+
 func _ready() -> void:
   weapon_manager.set_weapon(weapon)
 

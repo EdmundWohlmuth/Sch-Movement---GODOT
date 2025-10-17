@@ -10,11 +10,17 @@ func _ready() -> void:
 # subtract damage from current health
 func take_damage(damage:int):
   current_health -= damage
+  print(str(current_health))
   if current_health <= 0: 
     current_health = 0
-    # on_zero_health check
+    kill_character()
   
 # add health to character
 func heal(healing:int):
   take_damage(-healing)
   if current_health > total_health: current_health = total_health
+
+# when a character looses all it's health remove it
+func kill_character():
+  #get_parent().queue_free()
+  print("AM DEAD")

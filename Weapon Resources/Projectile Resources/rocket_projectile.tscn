@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://mshkxny53737"]
+
+[sub_resource type="GDScript" id="GDScript_0kqx3"]
+script/source = "extends RigidBody3D
+
+@export var projectile_stats:projectile_base
+
+var spawn_pos:Vector3
+var spawn_rot:Vector3
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+  pass # Replace with function body.
+
+
+func _physics_process(delta: float) -> void: 
+  pass
+"
+
+[sub_resource type="GDScript" id="GDScript_p1ljc"]
+script/source = "extends Resource
+class_name projectile_base
+
+@export var gravity_effected:bool
+@export var is_grappleable:bool
+@export var speed:float
+@export var damage:float"
+
+[sub_resource type="Resource" id="Resource_w7qe4"]
+script = SubResource("GDScript_p1ljc")
+gravity_effected = true
+is_grappleable = true
+speed = 6.0
+damage = 10.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0kqx3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p1ljc"]
+
+[node name="Rocket_Projectile" type="RigidBody3D"]
+script = SubResource("GDScript_0kqx3")
+projectile_stats = SubResource("Resource_w7qe4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, -0.2, 0, 0.2, -8.74228e-09, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_0kqx3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_p1ljc")
+skeleton = NodePath("../..")

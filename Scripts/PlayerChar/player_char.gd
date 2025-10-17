@@ -31,6 +31,7 @@ var grapple_speed:float = 150.0
 var can_grapple:bool = true
 var grapple_vector:Vector3 = Vector3.ZERO
 var grapple_point:Vector3 = Vector3.ZERO
+var max_grapple_dist:float = 25.0
 
 # === jumps === #
 var jump_velocity:float = 12.0
@@ -95,7 +96,7 @@ func movement(delta):
   if is_on_floor() || on_wall: 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
-    if wallrun_shape_cast.is_colliding(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
+    if wallrun_shape_cast.is_colliding() && !is_on_floor(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
     
     if !on_wall:
       crouch_slide()
@@ -127,10 +128,10 @@ func apply_gravity(delta):
     else: velocity.y -= gravity * delta
     
 func handle_attack():    
-  if Input.is_action_pressed("shoot") && weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0: 
+  if Input.is_action_pressed("shoot") && weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0 && weapon_manager.weapon_stats.can_shoot: 
     weapon_manager.shoot()
     weapon_knockback()
-  elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0:
+  elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0 && weapon_manager.weapon_stats.can_shoot:
     weapon_manager.shoot() 
     weapon_knockback()
     
@@ -176,18 +177,17 @@ func get_movement_speed() -> float:
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
-  if on_wall: return ##
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
-  if !on_wall:
-    direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-  elif on_wall:
-    var up_vector:Vector3 = Vector3.UP
-    var wall_forward:Vector3 = up_vector.cross(wall_normal)
+  #if !on_wall:
+  direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+  #elif on_wall:
+    #var up_vector:Vector3 = Vector3.UP
+    #var wall_forward:Vector3 = up_vector.cross(wall_normal)
+    #
+    #if (head.transform.basis - wall_forward).magnitude > (head.transform.basis - -wall_forward).magnitude: 
+      #wall_forward = -wall_forward
     
-    if (head.transform.basis - wall_forward).magnitude > (head.transform.basis - -wall_forward).magnitude: 
-      wall_forward = -wall_forward
-    
-    direction = (head.transform.basis * wall_forward).normalized()
+    #direction = (head.transform.basis * wall_forward).normalized()
 
 # This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
@@ -212,7 +212,7 @@ func handle_air_strafe(delta):
 
 # keeps the player moving toward the wall to allow wallrunning
 func press_to_wall(delta):  
-  self.velocity += wall_normal * 8 * delta
+  self.velocity -= wall_normal * 4 * delta
 
 # reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide():
@@ -233,6 +233,13 @@ func ground_pound():
   if Input.is_action_just_pressed("slide") && !is_sliding && !is_on_floor():
     pass # change for special movement
 
+func is_in_grapple_range(there) -> bool:
+  var here = grapple_cast.global_transform.origin
+  var distance = here.distance_to(there)
+  
+  if distance > max_grapple_dist: return false
+  else: return true
+
 # gets and sets initial point of grapple
 func set_grapple():
   if grapple_cast.is_colliding():
@@ -244,7 +251,7 @@ func set_grapple():
 
 # Emit signal to UI for crosshair colors and juice
 func set_crosshair_juice():
-  if grapple_cast.is_colliding() && can_grapple: 
+  if grapple_cast.is_colliding() && can_grapple && is_in_grapple_range(grapple_cast.get_collision_point()): 
     SignalManager.emit_signal("send_dist_info", self.position.distance_to(grapple_cast.get_collision_point()))
     if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
     else: SignalManager.emit_signal("update_crosshair", 1)
@@ -258,6 +265,7 @@ func set_crosshair_juice():
 # determines what function is played when the grapple connects with a collision
 func check_grapple_type():
     if !grapple_cast.is_colliding(): return
+    if !is_in_grapple_range(grapple_cast.get_collision_point()): return 
     
     if grapple_cast.get_collider().collision_layer == 1: set_grapple()
     elif grapple_cast.get_collider().collision_layer == 2: weapon_steal()
@@ -281,6 +289,7 @@ func weapon_steal():
   
   weapon_manager.set_weapon(cast_target.weapon_manager.current_weapon)
   cast_target.weapon_manager.set_weapon(weapon_manager.weapons.MELEE, true)
+  weapon_manager.weapon_stats.raycast = grapple_cast
   SignalManager.emit_signal("update_weapon_data", weapon_manager.weapon_stats.current_ammo, weapon_manager.weapon_stats.total_ammo, true)
 
 func wallrun_juice():

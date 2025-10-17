@@ -4,8 +4,9 @@
 
 [resource]
 script = ExtResource("1_ncioc")
-projectile_speed = 0.0
-does_projectile_drop = false
+projectile_speed = 10.0
+does_projectile_drop = true
+is_grappleable = true
 damage = 100
 is_full_auto = false
 bullet_num = 0

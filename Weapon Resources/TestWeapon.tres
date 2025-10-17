@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_d467n")
-damage = 6
+damage = 5
 is_full_auto = false
-bullet_num = 1
-shot_cooldown_time = 0.1
+bullet_num = 6
+shot_cooldown_time = 0.2
 base_bullet_spread = 0.0
 current_bullet_spread = 0.0
 max_bullet_spread = 0.0
-knock_back = 6.0
+knock_back = 10.0
 projectile_type = 0
 total_ammo = 2
 current_ammo = 2

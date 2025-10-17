@@ -31,6 +31,9 @@ current_weapon = 8
 [node name="hurt_box" parent="." node_paths=PackedStringArray("health", "hurtbox") instance=ExtResource("3_x1rqp")]
 health = NodePath("../Health")
 hurtbox = NodePath("../CollisionShape3D")
+can_take_damage = true
+accept_bullet_damage = true
+accept_explosive_damage = true
 
 [node name="Health" parent="." instance=ExtResource("4_ubio8")]
 total_health = 10
