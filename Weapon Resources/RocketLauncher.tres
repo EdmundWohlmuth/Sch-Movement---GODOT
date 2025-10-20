@@ -7,6 +7,7 @@ script = ExtResource("1_ncioc")
 projectile_speed = 10.0
 does_projectile_drop = true
 is_grappleable = true
+projectile_node = "res://Weapon Resources/Projectile Resources/rocket_projectile.tscn"
 damage = 100
 is_full_auto = false
 bullet_num = 0

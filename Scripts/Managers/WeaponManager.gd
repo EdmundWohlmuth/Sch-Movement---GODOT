@@ -2,6 +2,7 @@ extends Node
 class_name weapon_node
 
 @export var controller:CharacterBody3D
+@export var bullet_origin:Node3D
 @onready var timer: Timer = $Timer
 
 enum weapons
@@ -67,10 +68,53 @@ func discard_weapon():
 func shoot():
   if timer.is_stopped(): timer.start(weapon_stats.shot_cooldown_time)
   match weapon_stats.projectile_type:
-    weapon_stats.projectile_types.hit_scan: weapon_stats.on_shoot()
-    weapon_stats.projectile_types.projectile: weapon_stats.on_shoot_proj()
-    weapon_stats.projectile_types.melee: weapon_stats.on_melee()
+    weapon_stats.projectile_types.hit_scan: on_shoot()
+    weapon_stats.projectile_types.projectile: on_shoot_proj()
+    weapon_stats.projectile_types.melee: on_melee()
 
 func enable_shoot():
   weapon_stats.re_enable_shoot()
   timer.stop()
+
+func on_shoot():
+  if !weapon_stats.can_shoot: return
+  if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
+    if weapon_stats.current_ammo > 0: # Shoot the Gun
+      weapon_stats.current_ammo -= 1
+      SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+      #draw_hit_scan()
+      weapon_stats.can_shoot = false
+      if weapon_stats.raycast.get_collider().is_class("CharacterBody3D"): 
+        weapon_stats.raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
+      
+      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+      
+    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+
+func on_shoot_proj():
+  if !weapon_stats.can_shoot: return
+  if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
+    if weapon_stats.current_ammo > 0: # Shoot the Gun
+      weapon_stats.current_ammo -= 1
+      SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+      
+      # CREATE PROJECTILE
+      var proj = load(weapon_stats.projectile_node)
+      var instance = proj.instantiate()
+      
+      instance.speed = weapon_stats.projectile_speed
+      instance.has_gravity = weapon_stats.does_projectile_drop
+      instance.is_grappleable = weapon_stats.is_grappleable
+      
+      instance.position = bullet_origin.global_position
+      instance.transform.basis = bullet_origin.global_transform.basis
+      get_parent().get_parent().add_child(instance)
+      
+      weapon_stats.can_shoot = false
+      
+      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+      
+    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+
+func on_melee():
+  pass

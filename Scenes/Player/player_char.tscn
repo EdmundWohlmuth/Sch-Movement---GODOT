@@ -49,6 +49,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.877834, -0.49521, -1.26814)
 visible = false
 mesh = SubResource("BoxMesh_pfg0q")
 
+[node name="Bullet_Origin" type="Node3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1)
+
 [node name="WallRunShapeCast" type="ShapeCast3D" parent="."]
 transform = Transform3D(1.3, 0, 0, 0, 0.5, 0, 0, 0, 1.3, 0, 0.556993, 0)
 shape = SubResource("CylinderShape3D_pfg0q")

@@ -1,17 +1,21 @@
-[gd_resource type="Resource" script_class="weapon_base" load_steps=2 format=3 uid="uid://dxhgy056cakyr"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dxhgy056cakyr"]
 
-[ext_resource type="Script" uid="uid://fxlpqkq3psv5" path="res://Weapon Resources/weapon_base.gd" id="1_d467n"]
+[ext_resource type="Script" uid="uid://dky4ay2vk1jw4" path="res://Weapon Resources/weapon_projectile.gd" id="1_d467n"]
 
 [resource]
 script = ExtResource("1_d467n")
+projectile_speed = 1.0
+does_projectile_drop = false
+is_grappleable = false
+projectile_node = "res://Weapon Resources/Projectile Resources/rocket_projectile.tscn"
 damage = 5
-is_full_auto = false
-bullet_num = 6
+is_full_auto = true
+bullet_num = 1
 shot_cooldown_time = 0.2
 base_bullet_spread = 0.0
 current_bullet_spread = 0.0
 max_bullet_spread = 0.0
-knock_back = 10.0
-projectile_type = 0
-total_ammo = 2
-current_ammo = 2
+knock_back = 2.0
+projectile_type = 1
+total_ammo = 20
+current_ammo = 20

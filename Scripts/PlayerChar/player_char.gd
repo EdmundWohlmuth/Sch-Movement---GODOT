@@ -59,9 +59,10 @@ var wallrun_tilt_angle:float = 25
 @onready var camera = $Head/Camera3D
 @onready var coyote_timer = $CoyoteTimer
 @onready var slide_cooldown_timer = $SlideCooldownTimer
+@onready var bullet_origin: Node3D = $Head/Camera3D/Bullet_Origin
 
 #NODES
-@export var weapon_manager:weapon_node
+@export var weapon_manager:Node3D
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -70,6 +71,7 @@ func _ready():
   Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
   weapon_manager.is_player = true
   weapon_manager.controller = self
+  weapon_manager.bullet_origin = bullet_origin
   up_direction = Vector3.UP
 
 # Handles the mouse looking
