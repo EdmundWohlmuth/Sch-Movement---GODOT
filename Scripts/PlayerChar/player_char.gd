@@ -254,6 +254,7 @@ func set_grapple():
 # Emit signal to UI for crosshair colors and juice
 func set_crosshair_juice():
   if grapple_cast.is_colliding() && can_grapple && is_in_grapple_range(grapple_cast.get_collision_point()): 
+    if grapple_cast.get_collider() == null: return
     SignalManager.emit_signal("send_dist_info", self.position.distance_to(grapple_cast.get_collision_point()))
     if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
     else: SignalManager.emit_signal("update_crosshair", 1)

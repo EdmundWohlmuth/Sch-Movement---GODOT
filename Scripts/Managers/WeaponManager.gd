@@ -105,6 +105,7 @@ func on_shoot_proj():
       instance.speed = weapon_stats.projectile_speed
       instance.has_gravity = weapon_stats.does_projectile_drop
       instance.is_grappleable = weapon_stats.is_grappleable
+      instance.damage = weapon_stats.damage
       
       instance.position = bullet_origin.global_position
       instance.transform.basis = bullet_origin.global_transform.basis

@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_d467n")
-projectile_speed = 1.0
+projectile_speed = 2.0
 does_projectile_drop = false
-is_grappleable = false
+is_grappleable = true
 projectile_node = "res://Weapon Resources/Projectile Resources/rocket_projectile.tscn"
-damage = 5
+damage = 1
 is_full_auto = true
 bullet_num = 1
 shot_cooldown_time = 0.2
