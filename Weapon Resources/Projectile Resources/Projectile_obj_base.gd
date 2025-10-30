@@ -22,5 +22,5 @@ func _physics_process(_delta: float) -> void:
     
     if collision.is_class("CharacterBody3D"):
       collision.hurt_box.on_hit(damage, 0)
-    else: print("wall")
+    else: pass
     queue_free()
