@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cuo54tyc6mcv3"]
+
+[ext_resource type="Script" uid="uid://dky4ay2vk1jw4" path="res://Weapon Resources/weapon_projectile.gd" id="1_ncioc"]
+
+[resource]
+script = ExtResource("1_ncioc")
+projectile_speed = 10.0
+does_projectile_drop = true
+is_grappleable = true
+projectile_node = "res://Weapon Resources/Projectile Resources/rocket_projectile.tscn"
+damage = 100
+is_full_auto = false
+bullet_num = 0
+shot_cooldown_time = 0.0
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
+knock_back = 40.0
+projectile_type = 1
+total_ammo = 1
+current_ammo = 0

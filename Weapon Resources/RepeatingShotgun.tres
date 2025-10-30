@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="weapon_base" load_steps=2 format=3 uid="uid://pdjrt06guji2"]
+
+[ext_resource type="Script" uid="uid://fxlpqkq3psv5" path="res://Weapon Resources/weapon_base.gd" id="1_hk6uf"]
+
+[resource]
+script = ExtResource("1_hk6uf")
+damage = 4
+is_full_auto = false
+bullet_num = 4
+shot_cooldown_time = 0.0
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
+knock_back = 6.0
+projectile_type = 0
+total_ammo = 5
+current_ammo = 5

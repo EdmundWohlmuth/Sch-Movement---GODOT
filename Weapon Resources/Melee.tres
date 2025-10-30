@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cgr2aps7imucv"]
+
+[ext_resource type="Script" uid="uid://bur23hrdds0b7" path="res://Weapon Resources/weapon_melee.gd" id="1_eodkd"]
+
+[resource]
+script = ExtResource("1_eodkd")
+damage = 0
+is_full_auto = false
+bullet_num = 0
+shot_cooldown_time = 0.0
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
+knock_back = 0.0
+projectile_type = 0
+total_ammo = 0
+current_ammo = 0

@@ -1,27 +1,44 @@
-extends Node3D
+extends Resource
 class_name weapon_base
 
 var weapon_name:String
-@export var weapon_type:WeaponManager
 @export var damage:int
 @export var is_full_auto:bool
 
-@export var projectile_num:int
+@export var bullet_num:int
 @export var shot_cooldown_time:float
-@export var base_projectile_spread:float
-@export var current_projectile_spread:float
-@export var max_projectile_spread:float
-enum projectile_types { hit_scan, projectile }
+@export var base_bullet_spread:float
+@export var current_bullet_spread:float
+@export var max_bullet_spread:float
+@export var knock_back:float
+enum projectile_types { hit_scan, projectile, melee}
+
 @export var projectile_type:projectile_types
 
 @export var total_ammo:int
 @export var current_ammo:int
 
+var raycast:RayCast3D
+var can_shoot:bool = true
+
+func _ready() -> void:
+  #weapon_name = str(current_weapon_type) # I don't think that's how this works, but you get the idea
+  pass
+
 func set_full_ammo():
   current_ammo = total_ammo
-
-func on_shoot():
-  pass
   
+# if player loose the gun, else wait for reload
 func on_no_ammo():
-  pass
+  print("discard")
+  SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, false)
+
+# allow weapon to fire again
+func re_enable_shoot():
+  can_shoot = true
+
+func draw_hit_scan(pos:Vector3, radius:float = 0.05, color:Color = Color.WHITE) -> MeshInstance3D:
+  var mesh_instance := MeshInstance3D.new()
+  var material := ORMMaterial3D.new()
+  
+  return

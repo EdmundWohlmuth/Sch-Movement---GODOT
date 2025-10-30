@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://cvlb0fom272m4"]
+
+[ext_resource type="Script" uid="uid://bo1em3k4kp423" path="res://Weapon Resources/Projectile Resources/Projectile_obj_base.gd" id="1_p1ljc"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p1ljc"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0kqx3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p1ljc"]
+
+[node name="Rocket_Projectile" type="RigidBody3D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_p1ljc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, -0.2, 0, 0.2, -8.74228e-09, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_p1ljc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, -0.2, 0, 0.2, -8.74228e-09, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_0kqx3")
+
+[node name="ShapeCast3D" type="ShapeCast3D" parent="."]
+transform = Transform3D(0.21, 0, 0, 0, -9.61651e-09, -0.21, 0, 0.22, -9.17939e-09, -8.86321e-05, 2.98023e-08, 0.0178736)
+shape = SubResource("CapsuleShape3D_p1ljc")
+target_position = Vector3(0, 0, 0)
+collision_mask = 11
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

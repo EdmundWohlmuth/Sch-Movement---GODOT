@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="weapon_base" load_steps=2 format=3 uid="uid://bijbl5j6x8bn1"]
+
+[ext_resource type="Script" uid="uid://fxlpqkq3psv5" path="res://Weapon Resources/weapon_base.gd" id="1_yh111"]
+
+[resource]
+script = ExtResource("1_yh111")
+damage = 6
+is_full_auto = true
+bullet_num = 1
+shot_cooldown_time = 0.25
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
+knock_back = 4.0
+projectile_type = 0
+total_ammo = 30
+current_ammo = 30

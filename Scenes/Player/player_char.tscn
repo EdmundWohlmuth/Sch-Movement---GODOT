@@ -1,17 +1,29 @@
-[gd_scene load_steps=4 format=3 uid="uid://d12tyfkvb4luu"]
+[gd_scene load_steps=6 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
+[ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_8vni7"]
+[sub_resource type="BoxMesh" id="BoxMesh_pfg0q"]
 
-[node name="PlayerCharacterBody" type="CharacterBody3D"]
-collision_layer = 2
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pfg0q"]
+height = 1.0
+radius = 0.6
+
+[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager")]
+collision_layer = 4
+collision_mask = 3
+wall_min_slide_angle = 0.785398
 script = ExtResource("1_2bvri")
+weapon_manager = NodePath("WeaponManager")
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")
+
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_pfg0q")]
+controller = NodePath("..")
+is_player = true
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
@@ -27,15 +39,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
-target_position = Vector3(0, 0, -25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.466261)
+target_position = Vector3(0, 0, -100)
+collision_mask = 11
 debug_shape_custom_color = Color(1, 0, 1, 1)
+
+[node name="WeaponMeshHolder" type="MeshInstance3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.877834, -0.49521, -1.26814)
+visible = false
+mesh = SubResource("BoxMesh_pfg0q")
+
+[node name="Bullet_Origin" type="Node3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1)
 
 [node name="WallRunShapeCast" type="ShapeCast3D" parent="."]
 transform = Transform3D(1.3, 0, 0, 0, 0.5, 0, 0, 0, 1.3, 0, 0.556993, 0)
-shape = SubResource("BoxShape3D_8vni7")
+shape = SubResource("CylinderShape3D_pfg0q")
 
 [node name="GroundingRayCast3D" type="RayCast3D" parent="."]
-transform = Transform3D(0.999848, -0.0174524, 7.62869e-10, 0, -4.37114e-08, -1, 0.0174524, 0.999848, -4.37047e-08, 0, -1, 0)
+transform = Transform3D(0.999848, -0.0174524, 7.62869e-10, 0, -4.37114e-08, -1, 0.0174524, 0.999848, -4.37047e-08, 0, -0.803858, 0)
 target_position = Vector3(0, 0, 0.5)
 debug_shape_custom_color = Color(1, 0, 1, 1)
 

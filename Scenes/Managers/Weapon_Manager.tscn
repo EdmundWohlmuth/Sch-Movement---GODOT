@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctlcautjqwklo"]
+
+[ext_resource type="Script" uid="uid://dlb6sr6jcxqn8" path="res://Scripts/Managers/WeaponManager.gd" id="1_2c3qj"]
+
+[node name="WeaponManager" type="Node3D"]
+script = ExtResource("1_2c3qj")
+
+[node name="Timer" type="Timer" parent="."]

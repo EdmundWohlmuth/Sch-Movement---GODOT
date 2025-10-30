@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdg7loubbna3d"]
+
+[ext_resource type="Script" uid="uid://dpuniu0yj7mv0" path="res://Scripts/Enemies/enemy_behavior.gd" id="1_613su"]
+[ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_ubio8"]
+[ext_resource type="PackedScene" uid="uid://0omtc6k3agci" path="res://Scenes/Character Nodes/hurt_box.tscn" id="3_x1rqp"]
+[ext_resource type="PackedScene" uid="uid://dn3n6t1lx1hld" path="res://Scenes/Character Nodes/health_node.tscn" id="4_ubio8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3pdns"]
+radius = 0.55296
+height = 2.06474
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_613su"]
+
+[node name="EnemyBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager")]
+collision_layer = 2
+script = ExtResource("1_613su")
+weapon_manager = NodePath("WeaponManager")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0597714, 0)
+shape = SubResource("CapsuleShape3D_3pdns")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 2
+mesh = SubResource("CapsuleMesh_613su")
+
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_ubio8")]
+controller = NodePath("..")
+current_weapon = 8
+
+[node name="hurt_box" parent="." node_paths=PackedStringArray("health", "hurtbox") instance=ExtResource("3_x1rqp")]
+health = NodePath("../Health")
+hurtbox = NodePath("../CollisionShape3D")
+can_take_damage = true
+accept_bullet_damage = true
+accept_explosive_damage = true
+
+[node name="Health" parent="." instance=ExtResource("4_ubio8")]
+total_health = 10
+current_health = 10
