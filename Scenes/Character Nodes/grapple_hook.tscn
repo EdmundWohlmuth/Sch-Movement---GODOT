@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0eehwfkelobi"]
+
+[ext_resource type="Script" uid="uid://rr01j8k1agqw" path="res://Scripts/Character Node Scripts/grapple_hook.gd" id="1_o2m40"]
+
+[node name="GrappleHook" type="Node"]
+script = ExtResource("1_o2m40")
+
+[node name="grapple_cooldown_timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="grapple_cooldown_timer" to="." method="_on_grapple_cooldown_timer_timeout"]
