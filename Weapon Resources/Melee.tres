@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_eodkd")
-damage = 0
-is_full_auto = false
-bullet_num = 0
-shot_cooldown_time = 0.0
-base_bullet_spread = 0.0
-current_bullet_spread = 0.0
-max_bullet_spread = 0.0
-knock_back = 0.0
-projectile_type = 0
-total_ammo = 0
-current_ammo = 0
+damage = null
+is_full_auto = null
+bullet_num = null
+shot_cooldown_time = null
+base_bullet_spread = null
+current_bullet_spread = null
+max_bullet_spread = null
+knock_back = null
+projectile_type = null
+total_ammo = null
+current_ammo = null
