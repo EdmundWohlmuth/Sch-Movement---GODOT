@@ -22,9 +22,6 @@ var air_speed = 28.0
 
 var look_speed:float = 0.01
 
-# === grapple === #
-@onready var grapple_cooldown_timer = $GrappleCooldownTimer
-
 var grapple_distance:float = 20.0
 var grapple_cooldown_time:float = 0.5
 var grapple_speed:float = 150.0
