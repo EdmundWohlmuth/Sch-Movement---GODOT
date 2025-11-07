@@ -106,7 +106,7 @@ height = 10.0
 sides = 64
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="WORLD_MESH"]
-transform = Transform3D(29.9437, 8.02339, 0, -8.02339, 29.9437, 0, 0, 0, 31, -16.509, 0, -28.7622)
+transform = Transform3D(27.8626, 13.5895, 0, -13.5895, 27.8626, 0, 0, 0, 31, -19.291, 1, -28.9)
 use_collision = true
 mesh = SubResource("PrismMesh_npfmg")
 material = ExtResource("2_dksy8")

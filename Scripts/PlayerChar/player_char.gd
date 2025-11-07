@@ -33,6 +33,8 @@ var max_grapple_dist:float = 25.0
 # === jumps === #
 var jump_velocity:float = 12.0
 var fall_acceleration:float = 3.0
+var base_fall_accel:float = 3.0
+var slide_fall_accel:float = 10.0
 var total_jumps:int = 1
 var available_jumps:int = 1
 var wall_normal:Vector3 = Vector3.ZERO
@@ -42,6 +44,9 @@ var is_sliding:bool = false
 var on_wall:bool = false
 var is_grappling:bool = false
 var is_crouched:bool = false
+
+# align with floors & slopes
+var xform:Transform3D
 
 # === juice === #
 var wallrun_tilt_angle:float = 25
@@ -85,13 +90,27 @@ func _input(event):
 func _physics_process(delta): 
   manage_input()
   on_wall_check()
+  align_to_floor()
   movement(delta)
   special_traverse.start_special_move(delta)
-  handle_jump()
-  slide()
-  handle_attack()
+  handle_jump() # move to _input
+  slide() # move to _input
+  handle_attack() # move to _input
     
   move_and_slide()
+
+# Makes it so the player 'sticks' to the ground
+func align_to_floor():
+  var floor_normal
+  if !is_on_floor_only(): floor_normal = Vector3.UP
+  else: floor_normal = grounding_ray.get_collision_normal()
+  
+  xform = global_transform
+  xform.basis.y = floor_normal
+  xform.basis.x = -xform.basis.z.cross(floor_normal)
+  xform.basis = xform.basis.orthonormalized()
+  
+  if global_transform != xform: global_transform = global_transform.interpolate_with(xform, 0.15).orthonormalized()
 
 # Apply ground movement
 func movement(delta):
@@ -102,7 +121,6 @@ func movement(delta):
     
     if !on_wall:
       crouch_slide()
-      #slope_stick(delta) # messes with on floor detection
     
     handle_movement(delta)
   elif !is_on_floor() || !on_wall:
@@ -127,16 +145,6 @@ func handle_attack():
   elif Input.is_action_just_pressed("shoot") && !weapon_manager.weapon_stats.is_full_auto && weapon_manager.weapon_stats.current_ammo > 0 && weapon_manager.weapon_stats.can_shoot:
     weapon_manager.shoot() 
     weapon_knockback()
-    
-# Allows players to slide down slodes
-func slope_stick(delta):
-  var _normal = grounding_ray.get_collision_normal()
-  if _normal.y == 1.0: 
-    up_direction = Vector3.UP
-    return # don't need to stick if surface is flat
-  up_direction = _normal
-  self.velocity += _normal * 10 * delta
-  #var transform:Transform3D = global_transform
     
 # Handles jump input and physics
 func handle_jump():
@@ -211,17 +219,18 @@ func press_to_wall(delta):
 func crouch_slide():
   if Input.is_action_just_pressed("slide") && !is_sliding:
     is_sliding = true
+    fall_acceleration = slide_fall_accel
     crouch_char()
     velocity += slide_speed_boost * direction
     max(self.velocity.length(), ground_deccel)
     
-    
   elif Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
+    fall_acceleration = base_fall_accel
     crouch_char(false)
     slide_cooldown_timer.start()
 
-# kills a lot of x / z momentum and drastically increases downward momentum
+# kills a lot (if not all) of x / z momentum and drastically increases downward momentum
 func ground_pound():
   if Input.is_action_just_pressed("slide") && !is_sliding && !is_on_floor():
     pass # change for special movement
