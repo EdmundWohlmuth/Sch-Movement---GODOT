@@ -55,6 +55,30 @@ material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(15, 25, 96)
 
+[node name="CSGBox14" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-4.37114e-08, 0, -1.67759, 0, 5.09247, 0, 1, 0, -7.33297e-08, 80.8597, 12.5569, 117.23)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 25, 96)
+
+[node name="CSGBox15" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 2.84908, 0, 3.02047, 0, -1.81823e-08, 59.3111, 19.7008, 28.9786)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 25, 96)
+
+[node name="CSGBox16" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 2.84908, 0, 3.02047, 0, -1.81823e-08, 105.203, 22.5107, 28.9786)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 26.9725, 96)
+
+[node name="CSGBox17" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.50448e-08, 1.36872, -0.00491197, 3.73123e-08, 0.551889, 0.012182, 0.920384, 0, -5.74151e-10, 66.9781, 52.9461, 15.9219)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 26.9725, 96)
+
 [node name="CSGBox3" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 10.0227, 41.859)
 material_override = ExtResource("2_dksy8")
@@ -81,6 +105,30 @@ size = Vector3(4, 3, 4)
 
 [node name="CSGBox9" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 11.0227, 10.359)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
+[node name="CSGBox10" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(2.12035, 0, 0, 0, 0.978371, 0, 0, 0, 0.978371, 10, 26.6025, 89.7997)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
+[node name="CSGBox11" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(3.01479, 0, 0, 0, 1, 0, 0, 0, 1, 41.9742, 35.637, 89.7997)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
+[node name="CSGBox12" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(5.08321, 0, 0, 0, 0.996116, 0, 0, 0, 0.996116, 82.8336, 44.7522, 89.7997)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
+[node name="CSGBox13" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(4.45142, 0, 0, 0, 2.16143, 0, 0, 0, 1, 134.939, 56.0822, 89.7997)
 material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(3, 2, 48)
