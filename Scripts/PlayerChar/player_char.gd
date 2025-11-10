@@ -24,7 +24,7 @@ var look_speed:float = 0.01
 
 var grapple_distance:float = 20.0
 var grapple_cooldown_time:float = 0.5
-var grapple_speed:float = 150.0
+var grapple_speed:float = 80.0
 var can_grapple:bool = true
 var grapple_vector:Vector3 = Vector3.ZERO
 var grapple_point:Vector3 = Vector3.ZERO
@@ -81,10 +81,16 @@ func _ready():
 
 # Handles the mouse looking
 func _input(event):
-  if event is InputEventMouseMotion:
+  if event is InputEventMouseMotion || event is InputEventJoypadMotion:
     head.rotate_y(-event.relative.x * look_speed)
     camera.rotate_x(-event.relative.y * look_speed)
     camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(85))
+  
+  if event is InputEventKey || event is InputEventJoypadButton:
+    if event.is_action_pressed("slide"): crouch_slide()
+    if event.is_action_released("slide"): end_slide() 
+    if event.is_action_pressed("jump"): handle_jump()
+    if event.is_action_pressed("shoot"): handle_attack()
     
 
 func _physics_process(delta): 
@@ -93,10 +99,7 @@ func _physics_process(delta):
   align_to_floor()
   movement(delta)
   special_traverse.start_special_move(delta)
-  handle_jump() # move to _input
-  slide() # move to _input
-  handle_attack() # move to _input
-    
+  
   move_and_slide()
 
 # Makes it so the player 'sticks' to the ground
@@ -119,15 +122,13 @@ func movement(delta):
     
     if wallrun_shape_cast.is_colliding() && !is_on_floor(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
     
-    if !on_wall:
-      crouch_slide()
-    
     handle_movement(delta)
   elif !is_on_floor() || !on_wall:
     handle_air_strafe(delta)
     apply_gravity(delta) # Add the gravity.
 
-func slide():
+# Checks to see if Sliding has ended
+func end_slide():
   if Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
     crouch_char(false)
@@ -178,6 +179,8 @@ func get_movement_speed() -> float:
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
+  var floor_normal = grounding_ray.get_collision_normal()
+  
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   #if !on_wall:
   direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -217,7 +220,7 @@ func press_to_wall(delta):
 
 # reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide():
-  if Input.is_action_just_pressed("slide") && !is_sliding:
+  if Input.is_action_pressed("slide") && !is_sliding:
     is_sliding = true
     fall_acceleration = slide_fall_accel
     crouch_char()
@@ -225,6 +228,7 @@ func crouch_slide():
     max(self.velocity.length(), ground_deccel)
     
   elif Input.is_action_just_released("slide"):
+    is_sliding = false
     ground_deccel = norm_deccel
     fall_acceleration = base_fall_accel
     crouch_char(false)
@@ -238,10 +242,14 @@ func ground_pound():
 func wallrun_juice():
   if on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
-  
-func crouch_char(is_crouched:bool = true):
-  if is_crouched: scale.y = 0.5
-  else: scale.y = 1
+ 
+# Should visually drop player to crouch / slide height (NOT WORKING) 
+func crouch_char(crouched:bool = true):
+  if crouched: 
+    scale.y = 0.5
+  else:
+    scale.y = 1
+  print(str(scale.y))
 
 # Change velocity based on weapon knockback
 func weapon_knockback():
