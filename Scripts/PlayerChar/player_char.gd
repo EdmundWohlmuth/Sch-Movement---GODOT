@@ -179,27 +179,20 @@ func get_movement_speed() -> float:
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
+  var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   var floor_normal = grounding_ray.get_collision_normal()
   
-  var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
-  #if !on_wall:
   direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-  #elif on_wall:
-    #var up_vector:Vector3 = Vector3.UP
-    #var wall_forward:Vector3 = up_vector.cross(wall_normal)
-    #
-    #if (head.transform.basis - wall_forward).magnitude > (head.transform.basis - -wall_forward).magnitude: 
-      #wall_forward = -wall_forward
-    
-    #direction = (head.transform.basis * wall_forward).normalized()
 
 # This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
   var speed_cap = get_movement_speed()
+  
   if speed_cap > 0:
     var accel_speed = ground_accel * delta * get_movement_speed()
+    
     accel_speed = min(accel_speed, speed_cap)
-    #else: accel_speed = min(accel_speed, speed_cap) * 2
+    #else: accel_speed = min(accel_speed, speed_cap) * 2    
     self.velocity += accel_speed * direction
     
   # This adds friction to the character to slow them down while on the ground
@@ -208,6 +201,7 @@ func handle_movement(delta):
   var real_speed = max(self.velocity.length() - drop * 4, 0)
   if self.velocity.length() > 0:
     real_speed /= self.velocity.length()
+  
   self.velocity *= real_speed
 
 # allows for steering while in the air for more floaty air movement

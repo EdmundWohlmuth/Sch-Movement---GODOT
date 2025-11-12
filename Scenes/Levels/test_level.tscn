@@ -34,15 +34,6 @@ weapon = 5
 
 [node name="WORLD_MESH" type="Node3D" parent="."]
 
-[node name="Floor" type="CSGBox3D" parent="WORLD_MESH"]
-transform = Transform3D(0.999996, -0.00245766, 0.00102346, 0.00245869, 0.999997, -0.00100164, -0.00102099, 0.00100415, 0.999999, -2.49885, -0.470545, 0.00208612)
-material_override = ExtResource("1_8yeky")
-calculate_tangents = false
-use_collision = true
-collision_priority = 20.0
-size = Vector3(500, 0.971191, 500)
-metadata/_edit_lock_ = true
-
 [node name="CSGBox1" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.42389, -26.141)
 material_override = ExtResource("2_dksy8")
@@ -110,3 +101,10 @@ transform = Transform3D(27.8626, 13.5895, 0, -13.5895, 27.8626, 0, 0, 0, 31, -19
 use_collision = true
 mesh = SubResource("PrismMesh_npfmg")
 material = ExtResource("2_dksy8")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_8yeky")
+use_collision = true
+size = Vector3(500, 1, 500)
+metadata/_edit_lock_ = true
