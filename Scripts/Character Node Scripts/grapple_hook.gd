@@ -14,9 +14,11 @@ var grapple_point
 var grapple_dist
 var is_grappling:bool = false
 var can_grapple:bool = true
+var is_pulling:bool = false
 
 func _physics_process(_delta: float) -> void:
-  if is_grappling && (get_parent().is_on_floor() || get_parent().is_on_wall()): grapple_end()
+  # end grappling early if hitting a wall
+  if is_grappling && ((get_parent().is_on_floor() || get_parent().is_on_wall()) && !is_pulling): grapple_end()
 
 # Generaic func name for player controller to call
 func start_special_move(delta):
@@ -28,11 +30,15 @@ func grapple(delta):
   if Input.is_action_just_pressed("grapple") && can_grapple: check_grapple_type() ## need to keep checking if layer 4
   
   # for hanging on the grapple line
-  if Input.is_action_just_released("grapple") && is_grappling: grapple_dist = grapple_point.distance_to(get_parent().position)
+  if Input.is_action_just_released("grapple") && is_grappling: 
+    grapple_dist = grapple_point.distance_to(get_parent().position)
+    is_pulling = false
   if !Input.is_action_pressed("grapple") && is_grappling: grapple_hang(delta)
   
   # 'reeling' self in on grapple
-  if Input.is_action_pressed("grapple") && can_grapple && is_grappling: grapple_pull(delta, grapple_speed)
+  if Input.is_action_pressed("grapple") && can_grapple && is_grappling: 
+    grapple_pull(delta, grapple_speed)
+    is_pulling = true
   elif Input.is_action_just_pressed("jump") && is_grappling: # stop grappling
     grapple_end()
     get_parent().velocity.y += get_parent().jump_velocity # overriding jump here for game feel
@@ -89,6 +95,7 @@ func grapple_pull(delta, speed):
     
   get_parent().velocity += grapple_vector * delta
 
+# lets the player dangle at the distance they released the reel in option on the Grapple hook
 func grapple_hang(delta):
   if grapple_dist == null: return
   
@@ -99,7 +106,8 @@ func grapple_end():
   can_grapple = false
   is_grappling = false
   grapple_cooldown_timer.start(grapple_cooldown_time)
-  
+ 
+# Check enemies weapon and add it to the player's weapon slot 
 func weapon_steal():
   if is_grappling: is_grappling = false
   

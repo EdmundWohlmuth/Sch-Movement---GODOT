@@ -90,13 +90,14 @@ func _input(event):
     if event.is_action_pressed("slide"): crouch_slide()
     if event.is_action_released("slide"): end_slide() 
     if event.is_action_pressed("jump"): handle_jump()
-    if event.is_action_pressed("shoot"): handle_attack()
+    
     
 
 func _physics_process(delta): 
   manage_input()
+  if Input.is_action_pressed("shoot"): handle_attack()
   on_wall_check()
-  align_to_floor()
+  #align_to_floor()
   movement(delta)
   special_traverse.start_special_move(delta)
   
@@ -216,17 +217,19 @@ func press_to_wall(delta):
 func crouch_slide():
   if Input.is_action_pressed("slide") && !is_sliding:
     is_sliding = true
-    fall_acceleration = slide_fall_accel
+    if grounding_ray.get_collision_normal() != Vector3.UP: fall_acceleration = slide_fall_accel * 2
+    else: fall_acceleration = slide_fall_accel
+
     crouch_char()
     velocity += slide_speed_boost * direction
     max(self.velocity.length(), ground_deccel)
     
-  elif Input.is_action_just_released("slide"):
-    is_sliding = false
-    ground_deccel = norm_deccel
-    fall_acceleration = base_fall_accel
-    crouch_char(false)
-    slide_cooldown_timer.start()
+  #elif Input.is_action_just_released("slide"):
+    #is_sliding = false
+    #ground_deccel = norm_deccel
+    #fall_acceleration = base_fall_accel
+    #crouch_char(false)
+    #slide_cooldown_timer.start()
 
 # kills a lot (if not all) of x / z momentum and drastically increases downward momentum
 func ground_pound():
@@ -241,8 +244,10 @@ func wallrun_juice():
 func crouch_char(crouched:bool = true):
   if crouched: 
     scale.y = 0.5
+    position.y -= 0.5
   else:
     scale.y = 1
+    position.y += 0.5
   print(str(scale.y))
 
 # Change velocity based on weapon knockback

@@ -78,12 +78,14 @@ func enable_shoot():
 
 func on_shoot():
   if !weapon_stats.can_shoot: return
+  
   if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
     if weapon_stats.current_ammo > 0: # Shoot the Gun
       weapon_stats.current_ammo -= 1
       SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
       #draw_hit_scan()
       weapon_stats.can_shoot = false
+      if weapon_stats.raycast.get_collider() == null:return
       if weapon_stats.raycast.get_collider().is_class("CharacterBody3D"): 
         weapon_stats.raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
       
