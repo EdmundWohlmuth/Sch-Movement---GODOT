@@ -67,11 +67,35 @@ material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(15, 25, 96)
 
+[node name="CSGBox24" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.266957, 1.8213, 0.285148, -7.03625e-09, 2.40959, -0.215531, -9.30899e-09, 59.3111, 12.3087, 47.99)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(5.84192, 25, 96)
+
 [node name="CSGBox16" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 2.84908, 0, 3.02047, 0, -1.81823e-08, 105.203, 22.5107, 28.9786)
 material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(15, 26.9725, 96)
+
+[node name="CSGBox21" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 1.46566, 0, 3.02047, 0, -1.81823e-08, 149.942, 17.6833, 28.9786)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 26.9725, 96)
+
+[node name="CSGBox22" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 1.46566, 0, 3.02047, 0, -1.81823e-08, 96.1031, -18.9023, 38.9055)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 26.9725, 354.864)
+
+[node name="CSGBox25" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(-1.32029e-07, 0, -0.415963, 0, 1.46566, 0, 3.02047, 0, -1.81823e-08, 96.1031, -18.9023, 122.36)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(15, 26.9725, 354.864)
 
 [node name="CSGBox17" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(-1.50448e-08, 1.36872, -0.00491197, 3.73123e-08, 0.551889, 0.012182, 0.920384, 0, -5.74151e-10, 66.9781, 52.9461, 15.9219)
@@ -133,6 +157,12 @@ material_override = ExtResource("2_dksy8")
 use_collision = true
 size = Vector3(3, 2, 48)
 
+[node name="CSGBox23" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(0.399115, 0, -0.525208, 0, 10.0736, 0, 0.331305, 0, 0.632706, 161.585, 25.9493, 93.7162)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(3, 2, 48)
+
 [node name="CSGBox7" type="CSGBox3D" parent="WORLD_MESH"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8.0146, 1.52269, 2.87422)
 material_override = ExtResource("2_dksy8")
@@ -155,6 +185,42 @@ sides = 64
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="WORLD_MESH"]
 transform = Transform3D(29.9437, 8.02339, 0, -8.02339, 29.9437, 0, 0, 0, 31, -16.509, 0, -28.7622)
+use_collision = true
+mesh = SubResource("PrismMesh_npfmg")
+material = ExtResource("2_dksy8")
+
+[node name="CSGBox18" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3205, 2.23819, -72.109)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(25, 15, 25)
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="WORLD_MESH"]
+transform = Transform3D(21.3586, 22.6803, 0, -22.6803, 21.3586, 0, 0, 0, 26.0896, -4.26776, -0.776168, -72.4712)
+use_collision = true
+mesh = SubResource("PrismMesh_npfmg")
+material = ExtResource("2_dksy8")
+
+[node name="CSGBox20" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.7727, -2.24172, -112.738)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(25, 15, 25)
+
+[node name="CSGMesh3D4" type="CSGMesh3D" parent="WORLD_MESH"]
+transform = Transform3D(18.0373, 25.4016, 0, -25.4016, 18.0373, 0, 0, 0, 26.0896, -4.26776, -3.70307, -112.193)
+use_collision = true
+mesh = SubResource("PrismMesh_npfmg")
+material = ExtResource("2_dksy8")
+
+[node name="CSGBox19" type="CSGBox3D" parent="WORLD_MESH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76.9405, 11.9887, -72.109)
+material_override = ExtResource("2_dksy8")
+use_collision = true
+size = Vector3(25, 15, 25)
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="WORLD_MESH"]
+transform = Transform3D(21.3586, 22.6803, 0, -22.6803, 21.3586, 0, 0, 0, 26.0896, 53.639, 9.0229, -72.4712)
 use_collision = true
 mesh = SubResource("PrismMesh_npfmg")
 material = ExtResource("2_dksy8")
