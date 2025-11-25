@@ -35,7 +35,7 @@ weapon = 5
 [node name="WORLD_MESH" type="Node3D" parent="."]
 
 [node name="Floor" type="CSGBox3D" parent="WORLD_MESH"]
-transform = Transform3D(0.999996, -0.00245766, 0.00102346, 0.00245869, 0.999997, -0.00100164, -0.00102099, 0.00100415, 0.999999, -2.49885, -0.470545, 0.00208612)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.49885, -0.470545, 0.00208612)
 material_override = ExtResource("1_8yeky")
 calculate_tangents = false
 use_collision = true
