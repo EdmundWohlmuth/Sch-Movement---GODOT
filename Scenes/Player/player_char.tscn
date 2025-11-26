@@ -29,6 +29,7 @@ controller = NodePath("..")
 is_player = true
 
 [node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.15
 
 [node name="SlideCooldownTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -69,4 +70,5 @@ grapple_speed = 100.0
 grapple_cooldown_time = 0.5
 grapple_cast = NodePath("../Head/Camera3D/RayCast3D")
 
+[connection signal="timeout" from="CoyoteTimer" to="." method="coyote_timer_timeout"]
 [connection signal="timeout" from="SlideCooldownTimer" to="." method="_on_slide_cooldown_timer_timeout"]

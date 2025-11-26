@@ -2,7 +2,7 @@ class_name player_char
 extends CharacterBody3D
 
 # === consts === #
-const COYOTE_TIME:float = 0.25
+const COYOTE_TIME:float = 0.15
 
 # === movement === #
 var direction:Vector3 = Vector3.ZERO
@@ -41,6 +41,7 @@ var ground_normal:Vector3 = Vector3.ZERO
 # === state bools === # --TO BE REPLACED WITH ENUM SYSTEM--
 var is_sliding:bool = false
 var on_wall:bool = false
+var has_gravity:bool = false
 
 # align with floors & slopes --MAY BE REMOVED--
 var xform:Transform3D
@@ -79,7 +80,7 @@ enum states
   AIRBORNE,
   DEAD
 }
-var current_state:states = states.IDLE
+@export var current_state:states = states.IDLE
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -106,13 +107,16 @@ func _input(event):
       crouch_slide()
     if event.is_action_released("slide"): 
       end_slide() 
-      if direction > Vector3.ZERO: set_state(states.IDLE)
+      if direction > Vector3.ZERO && current_state != states.AIRBORNE: set_state(states.IDLE)
       else: set_state(states.RUNNING)
     if event.is_action_pressed("jump"): 
       handle_jump()
     
  
 func set_state(state:states):
+  if current_state == state: return
+  on_state_end()
+  
   match state:
     states.IDLE:
       current_state = states.IDLE
@@ -129,18 +133,29 @@ func set_state(state:states):
     states.AIRBORNE:
       current_state = states.AIRBORNE
       speed_cap = run_speed_cap
+      coyote_timer.start(COYOTE_TIME)
     states.DEAD:
       current_state = states.DEAD
-   
+      
+  print(str(states.keys()[current_state]))
+  
+func on_state_end():
+  match current_state:
+    states.IDLE:pass
+    states.RUNNING:pass
+    states.CROUCH_MOVE:pass
+    states.SLIDING:pass
+    states.AIRBORNE: 
+      #print("air end")
+      has_gravity = false
+    states.DEAD: pass
 
 func _physics_process(delta):
-  print(str(current_state))
-  
-  if Input.is_action_pressed("shoot"): handle_attack() ##
-  if !is_on_floor(): set_state(states.AIRBORNE)
+  if Input.is_action_pressed("shoot"): handle_attack()
+  if !is_on_floor() && current_state != states.AIRBORNE: set_state(states.AIRBORNE)
   
   match current_state:
-    states.IDLE: pass
+    states.IDLE: deceleration(ground_deccel, delta)
     states.RUNNING: movement(delta)
     states.CROUCH_MOVE: movement(delta)
     states.SLIDING: movement(delta)
@@ -170,7 +185,7 @@ func align_to_floor():
 
 # Apply ground movement
 func movement(delta):
-  if is_on_floor() || on_wall: 
+  if (is_on_floor() || on_wall): 
     if available_jumps != total_jumps: available_jumps = total_jumps
     
     if wallrun_shape_cast.is_colliding() && !is_on_floor(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
@@ -190,7 +205,7 @@ func end_slide():
     slide_cooldown_timer.start()
 
 func apply_gravity(delta):
-  if !is_on_floor() && !on_wall:
+  if (!is_on_floor() && !on_wall) && has_gravity:
     if velocity.y < 0: velocity.y -= (fall_acceleration + gravity) * delta
     else: velocity.y -= gravity * delta
     
@@ -204,7 +219,9 @@ func handle_attack():
     
 # Handles jump input and physics
 func handle_jump():
-  if Input.is_action_just_pressed("jump") && available_jumps > 0 && is_on_floor():
+  has_gravity = true
+  
+  if Input.is_action_just_pressed("jump") && available_jumps > 0 && (is_on_floor() || has_gravity):
     available_jumps -= 1
     velocity.y += jump_velocity
   elif Input.is_action_just_pressed("jump") && on_wall:
@@ -227,8 +244,8 @@ func on_wall_check():
 func manage_input():
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   var floor_normal = grounding_ray.get_collision_normal()
-  if input_dir != Vector2.ZERO: set_state(states.RUNNING)
-  else: set_state(states.IDLE)
+  if input_dir != Vector2.ZERO && current_state != states.AIRBORNE: set_state(states.RUNNING)
+  elif is_on_floor(): set_state(states.IDLE)
   
   direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
@@ -314,3 +331,7 @@ func check_down_slope() -> bool:
 func _on_slide_cooldown_timer_timeout():
   is_sliding = false
   slide_cooldown_timer.stop()
+
+func coyote_timer_timeout() -> void:
+  has_gravity = true
+  coyote_timer.stop()
