@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://d12tyfkvb4luu"]
+[gd_scene load_steps=8 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
 [ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
+[ext_resource type="PackedScene" uid="uid://o7dcvym4whni" path="res://Scenes/Player/player_anim.tscn" id="2_wat63"]
 [ext_resource type="PackedScene" uid="uid://b0eehwfkelobi" path="res://Scenes/Character Nodes/grapple_hook.tscn" id="3_tywqa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
@@ -12,7 +13,7 @@
 height = 1.0
 radius = 0.6
 
-[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "special_traverse")]
+[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "special_traverse", "animation_control")]
 collision_layer = 4
 collision_mask = 3
 wall_min_slide_angle = 0.785398
@@ -20,6 +21,9 @@ floor_snap_length = 0.75
 script = ExtResource("1_2bvri")
 weapon_manager = NodePath("WeaponManager")
 special_traverse = NodePath("GrappleHook")
+animation_control = NodePath("player_anim")
+
+[node name="player_anim" parent="." instance=ExtResource("2_wat63")]
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")

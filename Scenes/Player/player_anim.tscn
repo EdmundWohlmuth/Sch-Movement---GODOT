@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://o7dcvym4whni"]
+
+[ext_resource type="Script" uid="uid://bt6qsuw5j876l" path="res://Scripts/PlayerChar/player_anim.gd" id="1_3kykr"]
+
+[node name="player_anim" type="Node3D"]
+script = ExtResource("1_3kykr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

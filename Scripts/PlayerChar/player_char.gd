@@ -69,6 +69,7 @@ var last_y:float = 0.0
 @export var health:Node
 @export var hurt_box:Node
 @export var special_traverse:Node
+@export var animation_control:Node
 
 # STATES
 enum states
