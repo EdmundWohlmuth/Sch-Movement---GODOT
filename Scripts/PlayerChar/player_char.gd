@@ -137,7 +137,8 @@ func set_state(state:states):
       coyote_timer.start(COYOTE_TIME)
     states.DEAD:
       current_state = states.DEAD
-      
+   
+  animation_control.play_anim(current_state)   
   print(str(states.keys()[current_state]))
   
 func on_state_end():
