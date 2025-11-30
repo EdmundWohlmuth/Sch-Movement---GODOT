@@ -25,6 +25,7 @@ func play_anim(state):
 
       animation_tree.set("parameters/conditions/is_running", false)
       animation_tree.set("parameters/conditions/is_idle", true)
+      animation_tree.set("parameters/conditions/is_airborne", false) 
     
     player_char.states.RUNNING:
       leg_left.visible = false
@@ -34,18 +35,25 @@ func play_anim(state):
       
       animation_tree.set("parameters/conditions/is_running", true)
       animation_tree.set("parameters/conditions/is_idle", false)
+      animation_tree.set("parameters/conditions/is_airborne", false) 
       
     player_char.states.CROUCH_MOVE:pass
+    
     player_char.states.SLIDING:
       leg_left.visible = true
       leg_right.visible = true
       arm_left.visible = false ## TEMP
       arm_right.visible = false ## TEMP
     player_char.states.AIRBORNE:
-      leg_left.visible = false
-      leg_right.visible = false
+      leg_left.visible = true
+      leg_right.visible = true
       arm_left.visible = true
       arm_right.visible = true
+    
+      animation_tree.set("parameters/conditions/is_airborne", true)
+      animation_tree.set("parameters/conditions/is_idle", false)    
+      animation_tree.set("parameters/conditions/is_running", false) 
+    
     player_char.states.DEAD:
       leg_left.visible = true
       leg_right.visible = true
