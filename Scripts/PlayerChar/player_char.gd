@@ -76,6 +76,7 @@ enum states
 {
   IDLE,
   RUNNING,
+  WALL_RUNNING,
   CROUCH_MOVE,
   SLIDING,
   AIRBORNE,
@@ -93,7 +94,7 @@ func _ready():
   weapon_manager.bullet_origin = bullet_origin
   up_direction = Vector3.UP
 
-# Handles the mouse looking
+# Handles the mouse looking and specific Key Inputs
 func _input(event):
   manage_input()
   
@@ -113,7 +114,7 @@ func _input(event):
     if event.is_action_pressed("jump"): 
       handle_jump()
     
- 
+# Sets Players current state and the values for those states
 func set_state(state:states):
   if current_state == state: return
   on_state_end()
@@ -125,6 +126,8 @@ func set_state(state:states):
     states.RUNNING:
       current_state = states.RUNNING
       speed_cap = run_speed_cap
+    states.WALL_RUNNING:
+      current_state = states.WALL_RUNNING
     states.CROUCH_MOVE:
       current_state = states.CROUCH_MOVE
       speed_cap = crouch_speed_cap
@@ -140,11 +143,14 @@ func set_state(state:states):
    
   animation_control.play_anim(current_state)   
   print(str(states.keys()[current_state]))
-  
+ 
+# Runs before changing the current state of the player 
 func on_state_end():
   match current_state:
     states.IDLE:pass
     states.RUNNING:pass
+    states.WALL_RUNNING:
+      has_gravity = true
     states.CROUCH_MOVE:pass
     states.SLIDING:pass
     states.AIRBORNE: 
@@ -154,8 +160,14 @@ func on_state_end():
 
 func _physics_process(delta):
   if Input.is_action_pressed("shoot"): handle_attack()
-  if !is_on_floor() && current_state != states.AIRBORNE: set_state(states.AIRBORNE)
+  on_wall_check()
+
+  if !is_on_floor() && (current_state != states.AIRBORNE || (current_state != states.WALL_RUNNING)): set_state(states.AIRBORNE)
   
+  # Grapple Hook movement
+  special_traverse.start_special_move(delta) ##
+  
+  # Determines values to use in character movement based on players state
   match current_state:
     states.IDLE: deceleration(ground_deccel, delta)
     states.RUNNING: movement(delta)
@@ -167,9 +179,6 @@ func _physics_process(delta):
       apply_gravity(delta)
     states.DEAD:pass
   
-  special_traverse.start_special_move(delta) ##
-  
-  on_wall_check()
   move_and_slide()
 
 # Makes it so the player 'sticks' to the ground
@@ -223,7 +232,7 @@ func handle_attack():
 func handle_jump():
   has_gravity = true
   
-  if Input.is_action_just_pressed("jump") && available_jumps > 0 && (is_on_floor() || has_gravity):
+  if Input.is_action_just_pressed("jump") && available_jumps > 0 && !on_wall && (is_on_floor() || has_gravity):
     available_jumps -= 1
     velocity.y += jump_velocity
   elif Input.is_action_just_pressed("jump") && on_wall:
@@ -236,6 +245,7 @@ func on_wall_check():
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
     ground_deccel = 0
     #wallrun_juice()
+    set_state(states.WALL_RUNNING)
   elif !wallrun_shape_cast.is_colliding() && on_wall:
     on_wall = false
     wall_normal = Vector3.ZERO
