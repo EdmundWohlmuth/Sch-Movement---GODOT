@@ -3,6 +3,7 @@ extends Control
 @onready var color_rect: ColorRect = $AspectRatioContainer/ColorRect
 @onready var dist_label: RichTextLabel = $AspectRatioContainer/ColorRect/RichTextLabel
 @onready var weapon_label: Label = $VBoxContainer/WeaponLabel
+@onready var speed_label: Label = $VBoxContainer2/SpeedLabel
 
 @export var out_of_range_color:Color
 @export var enemy_color:Color
@@ -13,15 +14,20 @@ var set_range:Callable = Callable(set_dist_text)
 var oor_text:Callable = Callable(set_out_of_range)
 var change_crosshair:Callable = Callable(set_crosshair_color)
 var update_wep_ui:Callable = Callable(set_weapon_label)
+var set_current_speed:Callable = Callable(set_speed_text)
 
 func _ready() -> void:
   SignalManager.connect("send_dist_info", set_range)
   SignalManager.connect("out_of_range_text", oor_text)
   SignalManager.connect("update_crosshair", change_crosshair)
   SignalManager.connect("update_weapon_data", update_wep_ui)
+  SignalManager.connect("send_current_speed", set_current_speed)
 
 func set_dist_text(distance:float) -> void:
   dist_label.text = str("%0.2f" % distance)
+
+func set_speed_text(speed:float) -> void:
+  speed_label.text = str("%*.*f" % [0, 2, speed])
 
 func set_out_of_range() -> void:
   dist_label.text = "---"
