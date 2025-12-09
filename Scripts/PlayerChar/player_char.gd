@@ -208,6 +208,9 @@ func movement(delta):
   
   if is_ground_slope(): last_y = global_position.y
 
+  SignalManager.emit_signal("send_current_speed", velocity.length())
+  #print(velocity.length())
+
 # Checks to see if Sliding has ended
 func end_slide():
   if Input.is_action_just_released("slide"):
