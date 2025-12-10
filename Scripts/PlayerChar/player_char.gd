@@ -49,12 +49,15 @@ var is_down_slope:bool = false
 var slide_up_deccel:float = 60.0
 
 # === juice === #
-var wallrun_tilt_angle:float = 25
+var wallrun_tilt_angle:float = 15
 
 # === raycasts === #
 @onready var grapple_cast = $Head/Camera3D/RayCast3D
 @onready var wallrun_shape_cast = $WallRunShapeCast
 @onready var grounding_ray: RayCast3D = $GroundingRayCast3D
+@onready var wall_left_cast: RayCast3D = $Head/WallLeftCast # fuck it
+@onready var wall_right_cast: RayCast3D = $Head/WallRightCast # see above
+
 var last_y:float = 0.0
 
 # === Objects === #
@@ -63,6 +66,7 @@ var last_y:float = 0.0
 @onready var coyote_timer = $CoyoteTimer
 @onready var slide_cooldown_timer = $SlideCooldownTimer
 @onready var bullet_origin: Node3D = $Head/Camera3D/Bullet_Origin
+@onready var grapple_origin: Node3D = $Head/Camera3D/Grapple_Origin
 
 #NODES
 @export var weapon_manager:Node3D
@@ -142,7 +146,7 @@ func set_state(state:states):
       current_state = states.DEAD
    
   animation_control.play_anim(current_state)   
-  print(str(states.keys()[current_state]))
+  #print(str(states.keys()[current_state]))
  
 # Runs before changing the current state of the player 
 func on_state_end():
@@ -240,6 +244,8 @@ func handle_jump():
     velocity.y += jump_velocity
 
 func on_wall_check():
+  if wallrun_shape_cast.is_colliding(): wall_normal = wallrun_shape_cast.get_collision_normal(0)
+  
   if wallrun_shape_cast.is_colliding() && !on_wall && !is_on_ceiling():
     on_wall = true
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
@@ -251,6 +257,7 @@ func on_wall_check():
     wall_normal = Vector3.ZERO
     ground_deccel = norm_deccel
     #wallrun_juice()
+  wallrun_juice()
   
 # Manage player input by checking the current input and setting the direction for later use
 func manage_input():
@@ -296,7 +303,7 @@ func handle_air_strafe(delta):
 
 # keeps the player moving toward the wall to allow wallrunning
 func press_to_wall(delta):  
-  self.velocity -= wall_normal * 4 * delta
+  self.velocity += (-wall_normal * 8) * delta
 
 # reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide():
@@ -313,8 +320,12 @@ func ground_pound():
     pass # change for special movement
 
 func wallrun_juice():
-  if on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
-  else: camera.rotation = Vector3.ZERO
+  if on_wall && wall_right_cast.is_colliding():
+    head.rotation_degrees.z = wallrun_tilt_angle
+  elif on_wall && wall_left_cast.is_colliding():
+    head.rotation_degrees.z = -wallrun_tilt_angle
+  else:
+    head.rotation_degrees.z = 0
  
 # Should visually drop player to crouch / slide height (NOT WORKING) 
 func crouch_char(crouched:bool = true):
