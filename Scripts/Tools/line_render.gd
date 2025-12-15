@@ -15,11 +15,10 @@ var iterations = 4
 # POINT ARRAYS #
 var current_points:Array[Vector3]
 var previous_points:Array[Vector3]
-var index_array:Array[Array]
+var index_array:Array
+var vertex_array:Array
 
 func _ready() -> void:
-  #for x in (num_of_points * 3) - 1
-  #for y in 
   pass
 
 func _physics_process(delta: float) -> void:
@@ -70,7 +69,26 @@ func draw_line(originPos:Vector3, endPos:Vector3):
   mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
   
   for i in range(index_array.size() / 3):
-    pass
+    var p1 = vertex_array[index_array[3*i]]
+    var p2 = vertex_array[index_array[3*i+1]]
+    var p3 = vertex_array[index_array[3*i+2]]
+    
+    var tangent = Plane(p1,p2,p3)
+    var normal = tangent.normal
+    
+    mesh.surface_set_tangent(tangent)
+    mesh.surface_set_normal(tangent)
+    mesh.surface_add_vertex(p1)
+    
+    mesh.surface_set_tangent(tangent)
+    mesh.surface_set_normal(tangent)
+    mesh.surface_add_vertex(p2)
+    
+    mesh.surface_set_tangent(tangent)
+    mesh.surface_set_normal(tangent)
+    mesh.surface_add_vertex(p3)
+  
+  mesh.surface_end()
 
 func remove_line():
   pass
