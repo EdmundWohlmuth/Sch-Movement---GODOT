@@ -79,6 +79,7 @@ enum states
   CROUCH_MOVE,
   SLIDING,
   AIRBORNE,
+  WALL_RUN,
   DEAD
 }
 @export var current_state:states = states.IDLE
@@ -92,27 +93,29 @@ func _ready():
   weapon_manager.controller = self
   weapon_manager.bullet_origin = bullet_origin
   up_direction = Vector3.UP
+  print(str(states.keys()[current_state]))
 
 # Handles the mouse looking
 func _input(event):
   manage_input()
   
+  #print("test")
+  
   if event is InputEventMouseMotion || event is InputEventJoypadMotion:
     head.rotate_y(-event.relative.x * look_speed)
     camera.rotate_x(-event.relative.y * look_speed)
     camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(85))
-  
+##TODO: Sliding work in air, like jumps  
   if event is InputEventKey || event is InputEventJoypadButton:
-    if event.is_action_pressed("slide"): 
-      set_state(states.SLIDING)
+    if event.is_action_pressed("slide") && current_state != states.AIRBORNE:
       crouch_slide()
-    if event.is_action_released("slide"): 
-      end_slide() 
-      if direction > Vector3.ZERO && current_state != states.AIRBORNE: set_state(states.IDLE)
-      else: set_state(states.RUNNING)
-    if event.is_action_pressed("jump"): 
+      set_state(states.SLIDING)
+    if event.is_action_released("slide"):
+      end_slide()
+      if velocity != Vector3.ZERO && (current_state != states.AIRBORNE || current_state != states.SLIDING): set_state(states.RUNNING)
+      elif velocity == Vector3.ZERO: set_state(states.IDLE)
+    if event.is_action_pressed("jump") && available_jumps > 0:
       handle_jump()
-    
  
 func set_state(state:states):
   if current_state == state: return
@@ -122,6 +125,7 @@ func set_state(state:states):
     states.IDLE:
       current_state = states.IDLE
       speed_cap = 0
+      available_jumps == total_jumps
     states.RUNNING:
       current_state = states.RUNNING
       speed_cap = run_speed_cap
@@ -135,6 +139,8 @@ func set_state(state:states):
       current_state = states.AIRBORNE
       speed_cap = run_speed_cap
       coyote_timer.start(COYOTE_TIME)
+    states.WALL_RUN:
+      pass
     states.DEAD:
       current_state = states.DEAD
       
@@ -149,21 +155,39 @@ func on_state_end():
     states.AIRBORNE: 
       #print("air end")
       has_gravity = false
+    states.WALL_RUN:
+      has_gravity = false
     states.DEAD: pass
 
 func _physics_process(delta):
   if Input.is_action_pressed("shoot"): handle_attack()
-  if !is_on_floor() && current_state != states.AIRBORNE: set_state(states.AIRBORNE)
+  
+  if !is_on_floor_only(): set_state(states.AIRBORNE)
+  elif is_on_floor_only() && velocity != Vector3.ZERO && current_state != states.SLIDING: set_state(states.RUNNING)
+  elif is_on_floor() && current_state != states.SLIDING && Input.get_vector("move_left", "move_right", "move_forward", "move_back") != Vector2.ZERO: set_state(states.RUNNING)
+  elif velocity == Vector3.ZERO && current_state != states.SLIDING: set_state(states.IDLE)
   
   match current_state:
-    states.IDLE: deceleration(ground_deccel, delta)
-    states.RUNNING: movement(delta)
-    states.CROUCH_MOVE: movement(delta)
-    states.SLIDING: movement(delta)
+    states.IDLE:
+      deceleration(ground_deccel, delta)
+       
+    states.RUNNING:   
+      movement(delta)
+      
+    states.CROUCH_MOVE:
+      movement(delta)
+      
+    states.SLIDING:
+      movement(delta)
+      
     states.AIRBORNE: 
       movement(delta)
       handle_air_strafe(delta)
       apply_gravity(delta)
+      
+    states.WALL_RUN:
+      movement(delta)
+      
     states.DEAD:pass
   
   special_traverse.start_special_move(delta) ##
@@ -188,8 +212,8 @@ func align_to_floor():
 func movement(delta):
   if (is_on_floor() || on_wall): 
     if available_jumps != total_jumps: available_jumps = total_jumps
-    
-    if wallrun_shape_cast.is_colliding() && !is_on_floor(): press_to_wall(delta) ## ADD SLIDING DOWN WALL WHEN NOT MOVING
+##TODO: ADD SLIDING DOWN WALL WHEN NOT MOVING    
+    if wallrun_shape_cast.is_colliding() && !is_on_floor(): press_to_wall(delta)
     
     handle_movement(delta)
   #elif !is_on_floor() || !on_wall:
@@ -222,18 +246,24 @@ func handle_attack():
 func handle_jump():
   has_gravity = true
   
-  if Input.is_action_just_pressed("jump") && available_jumps > 0 && (is_on_floor() || has_gravity):
-    available_jumps -= 1
+  if available_jumps > 0 && (is_on_floor()):
     velocity.y += jump_velocity
-  elif Input.is_action_just_pressed("jump") && on_wall:
+  elif on_wall:
+    print("here")
     velocity += wall_normal * jump_velocity
     velocity.y += jump_velocity
+  
+  available_jumps -= 1
 
 func on_wall_check():
-  if wallrun_shape_cast.is_colliding() && !on_wall && !is_on_ceiling():
-    on_wall = true
+  
+  if wallrun_shape_cast.is_colliding() && !is_on_ceiling() && !is_on_floor():
+    if !on_wall:
+      on_wall = true
+      ground_deccel = 0
+      #set_state(states.WALL_RUN)
+      
     wall_normal = wallrun_shape_cast.get_collision_normal(0)
-    ground_deccel = 0
     #wallrun_juice()
   elif !wallrun_shape_cast.is_colliding() && on_wall:
     on_wall = false
@@ -245,8 +275,6 @@ func on_wall_check():
 func manage_input():
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   var floor_normal = grounding_ray.get_collision_normal()
-  if input_dir != Vector2.ZERO && current_state != states.AIRBORNE: set_state(states.RUNNING)
-  elif is_on_floor(): set_state(states.IDLE)
   
   direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 

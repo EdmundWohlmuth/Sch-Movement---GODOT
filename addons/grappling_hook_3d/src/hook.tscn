@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0eehwfkelobi"]
+[gd_scene load_steps=6 format=3 uid="uid://dlqm10204rcaq"]
 
-[ext_resource type="Script" uid="uid://rr01j8k1agqw" path="res://Scripts/Character Node Scripts/grapple_hook.gd" id="1_o2m40"]
-[ext_resource type="Script" uid="uid://cj8gxtw0d7evv" path="res://addons/grappling_hook_3d/src/hook_model.gd" id="2_q2v5m"]
+[ext_resource type="Script" path="res://addons/grappling_hook_3d/src/hook_model.gd" id="1_axmsb"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2uiuu"]
 top_radius = 0.05
@@ -22,35 +21,25 @@ size = Vector3(0.1, 0.1, 0.25)
 albedo_color = Color(0.376471, 0.376471, 0.376471, 1)
 metallic = 1.0
 
-[node name="GrappleHook" type="Node"]
-script = ExtResource("1_o2m40")
+[node name="Hook" type="Node3D"]
+script = ExtResource("1_axmsb")
 
-[node name="grapple_cooldown_timer" type="Timer" parent="."]
+[node name="Rope" type="Node3D" parent="."]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-
-[node name="Hook" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.5, 0)
-script = ExtResource("2_q2v5m")
-
-[node name="Rope" type="Node3D" parent="Hook"]
-
-[node name="Rope Mesh" type="MeshInstance3D" parent="Hook/Rope"]
+[node name="Rope Mesh" type="MeshInstance3D" parent="Rope"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.5)
 mesh = SubResource("CylinderMesh_2uiuu")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_8746b")
 
-[node name="Hook End" type="Node3D" parent="Hook"]
+[node name="Hook End" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
-[node name="Model" type="MeshInstance3D" parent="Hook/Hook End"]
+[node name="Model" type="MeshInstance3D" parent="Hook End"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.125)
 mesh = SubResource("BoxMesh_usc5b")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_0nx8y")
 
-[node name="Rope Visual Target" type="Marker3D" parent="Hook/Hook End"]
+[node name="Rope Visual Target" type="Marker3D" parent="Hook End"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
-
-[connection signal="timeout" from="grapple_cooldown_timer" to="." method="_on_grapple_cooldown_timer_timeout"]
