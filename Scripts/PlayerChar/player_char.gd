@@ -93,13 +93,11 @@ func _ready():
   weapon_manager.controller = self
   weapon_manager.bullet_origin = bullet_origin
   up_direction = Vector3.UP
-  print(str(states.keys()[current_state]))
+  #print(str(states.keys()[current_state]))
 
 # Handles the mouse looking
 func _input(event):
   manage_input()
-  
-  #print("test")
   
   if event is InputEventMouseMotion || event is InputEventJoypadMotion:
     head.rotate_y(-event.relative.x * look_speed)
@@ -249,7 +247,6 @@ func handle_jump():
   if available_jumps > 0 && (is_on_floor()):
     velocity.y += jump_velocity
   elif on_wall:
-    print("here")
     velocity += wall_normal * jump_velocity
     velocity.y += jump_velocity
   

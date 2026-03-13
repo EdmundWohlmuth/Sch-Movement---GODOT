@@ -20,7 +20,7 @@ wall_min_slide_angle = 0.785398
 floor_snap_length = 0.75
 script = ExtResource("1_2bvri")
 weapon_manager = NodePath("WeaponManager")
-special_traverse = NodePath("GrappleHook")
+special_traverse = NodePath("Head/Camera3D/GrappleHook")
 animation_control = NodePath("player_anim")
 
 [node name="player_anim" parent="." instance=ExtResource("2_wat63")]
@@ -46,7 +46,7 @@ fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.466261)
-target_position = Vector3(0, 0, -100)
+target_position = Vector3(0, 0, -500)
 collision_mask = 11
 debug_shape_custom_color = Color(1, 0, 1, 1)
 
@@ -58,6 +58,15 @@ mesh = SubResource("BoxMesh_pfg0q")
 [node name="Bullet_Origin" type="Node3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1)
 
+[node name="GrappleHook" parent="Head/Camera3D" node_paths=PackedStringArray("parent", "weapon_manager", "grapple_cast") instance=ExtResource("3_tywqa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+parent = NodePath("../../..")
+weapon_manager = NodePath("../../../WeaponManager")
+max_grapple_dist = 40.0
+grapple_speed = 100.0
+grapple_cooldown_time = 1.0
+grapple_cast = NodePath("../RayCast3D")
+
 [node name="WallRunShapeCast" type="ShapeCast3D" parent="."]
 transform = Transform3D(1.3, 0, 0, 0, 0.5, 0, 0, 0, 1.3, 0, 0.556993, 0)
 shape = SubResource("CylinderShape3D_pfg0q")
@@ -66,13 +75,6 @@ shape = SubResource("CylinderShape3D_pfg0q")
 transform = Transform3D(0.999848, -0.0174524, 7.62869e-10, 0, -4.37114e-08, -1, 0.0174524, 0.999848, -4.37047e-08, 0, -0.803858, -0.5)
 target_position = Vector3(0, 0, 0.75)
 debug_shape_custom_color = Color(1, 0, 1, 1)
-
-[node name="GrappleHook" parent="." node_paths=PackedStringArray("weapon_manager", "grapple_cast") instance=ExtResource("3_tywqa")]
-weapon_manager = NodePath("../WeaponManager")
-max_grapple_dist = 40.0
-grapple_speed = 100.0
-grapple_cooldown_time = 1.0
-grapple_cast = NodePath("../Head/Camera3D/RayCast3D")
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="coyote_timer_timeout"]
 [connection signal="timeout" from="SlideCooldownTimer" to="." method="_on_slide_cooldown_timer_timeout"]

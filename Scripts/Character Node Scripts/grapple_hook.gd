@@ -1,7 +1,9 @@
 extends Node
 
 @onready var grapple_cooldown_timer: Timer = $grapple_cooldown_timer
+@onready var hook_controller: HookController = $HookController
 
+@export var parent:CharacterBody3D
 @export var weapon_manager:Node3D
 
 @export var max_grapple_dist:float
@@ -18,7 +20,7 @@ var is_pulling:bool = false
 
 func _physics_process(_delta: float) -> void:
   # end grappling early if hitting a wall
-  if is_grappling && ((get_parent().is_on_floor() || get_parent().is_on_wall()) && !is_pulling): grapple_end()
+  if is_grappling && ((parent.is_on_floor() || parent.is_on_wall()) && !is_pulling): grapple_end()
 
 # Generaic func name for player controller to call
 func start_special_move(delta):
@@ -31,17 +33,17 @@ func grapple(delta):
   
   # for hanging on the grapple line
   if Input.is_action_just_released("grapple") && is_grappling: 
-    grapple_dist = grapple_point.distance_to(get_parent().position)
+    grapple_dist = grapple_point.distance_to(parent.position)
     is_pulling = false
   if !Input.is_action_pressed("grapple") && is_grappling: grapple_hang(delta)
   
   # 'reeling' self in on grapple
-  if Input.is_action_pressed("grapple") && can_grapple && is_grappling: 
+  if Input.is_action_pressed("grapple") && can_grapple && is_grappling:
     grapple_pull(delta, grapple_speed)
     is_pulling = true
   elif Input.is_action_just_pressed("jump") && is_grappling: # stop grappling
     grapple_end()
-    get_parent().velocity.y += get_parent().jump_velocity # overriding jump here for game feel
+    parent.velocity.y += parent.jump_velocity # overriding jump here for game feel
   
   set_crosshair_juice()
 
@@ -59,20 +61,22 @@ func set_grapple():
     
     grapple_point = grapple_cast.get_collision_point()
     
-    var grapple_dir = (grapple_point - get_parent().position).normalized()
+    var grapple_dir = (grapple_point - parent.position).normalized()
     var _grapple_target_speed = grapple_dir * grapple_speed
 
-    is_grappling = true
+    is_grappling = true  
+    hook_controller.hook_launched.emit()
 
 # Emit signal to UI for crosshair colors and juice
 func set_crosshair_juice():
   if grapple_cast.is_colliding() && can_grapple && is_in_grapple_range(grapple_cast.get_collision_point()): 
     if grapple_cast.get_collider() == null: return
-    SignalManager.emit_signal("send_dist_info", get_parent().position.distance_to(grapple_cast.get_collision_point()))
+    SignalManager.emit_signal("send_dist_info", parent.position.distance_to(grapple_cast.get_collision_point()))
     if grapple_cast.get_collider().collision_layer == 1: SignalManager.emit_signal("update_crosshair", 2)
     else: SignalManager.emit_signal("update_crosshair", 1)
   elif grapple_cast.is_colliding() && can_grapple: 
     SignalManager.emit_signal("update_crosshair", 3)
+    SignalManager.emit_signal("send_dist_info", parent.position.distance_to(grapple_cast.get_collision_point()))
   else: 
     SignalManager.emit_signal("out_of_range_text")
     if can_grapple: SignalManager.emit_signal("update_crosshair", 0)
@@ -89,23 +93,24 @@ func check_grapple_type():
 # pulls player towards collision area
 func grapple_pull(delta, speed):
   var grapple_vector
-  var grapple_dir = (grapple_point - get_parent().position).normalized()
+  var grapple_dir = (grapple_point - parent.position).normalized()
   var grapple_target_speed = grapple_dir * speed
-  grapple_vector = (grapple_target_speed - get_parent().velocity)
+  grapple_vector = (grapple_target_speed - parent.velocity)
     
-  get_parent().velocity += grapple_vector * delta
+  parent.velocity += grapple_vector * delta
 
 # lets the player dangle at the distance they released the reel in option on the Grapple hook
 func grapple_hang(delta):
   if grapple_dist == null: return
   
-  if (grapple_point.distance_to(get_parent().position)) > grapple_dist: grapple_pull(delta, grapple_speed)
+  if (grapple_point.distance_to(parent.position)) > grapple_dist: grapple_pull(delta, grapple_speed)
   else: grapple_pull(delta, 0)
 
 func grapple_end():
   can_grapple = false
   is_grappling = false
   grapple_cooldown_timer.start(grapple_cooldown_time)
+  hook_controller.hook_detached.emit()
  
 # Check enemies weapon and add it to the player's weapon slot 
 func weapon_steal():
