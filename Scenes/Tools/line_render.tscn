@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://3ledv0ycmtxh"]
+
+[ext_resource type="Script" uid="uid://kuumsjtm0wyp" path="res://Scripts/Tools/line_render.gd" id="1_dmpmd"]
+
+[node name="LineRender" type="MeshInstance3D"]
+top_level = true
+script = ExtResource("1_dmpmd")

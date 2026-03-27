@@ -78,6 +78,7 @@ slide={
 3d_physics/layer_2="Enemy_Layer"
 3d_physics/layer_3="Player_Layer"
 3d_physics/layer_4="Proj_Layer"
+3d_physics/layer_5="Viewmodel_Layer"
 
 [physics]
 
