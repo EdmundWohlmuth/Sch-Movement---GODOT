@@ -38,3 +38,9 @@ accept_explosive_damage = true
 [node name="Health" parent="." instance=ExtResource("4_ubio8")]
 total_health = 10
 current_health = 10
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+avoidance_enabled = true
+radius = 1.0
+
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]
