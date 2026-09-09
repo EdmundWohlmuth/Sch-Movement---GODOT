@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cdg7loubbna3d"]
+[gd_scene load_steps=8 format=3 uid="uid://cdg7loubbna3d"]
 
 [ext_resource type="Script" uid="uid://dpuniu0yj7mv0" path="res://Scripts/Enemies/enemy_behavior.gd" id="1_613su"]
 [ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_ubio8"]
@@ -10,6 +10,8 @@ radius = 0.55296
 height = 2.06474
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_613su"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ubio8"]
 
 [node name="EnemyBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager")]
 collision_layer = 2
@@ -42,5 +44,9 @@ current_health = 10
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 avoidance_enabled = true
 radius = 1.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.1, 0, 0, 0, 0.5, 0, 0.8, 0.5)
+mesh = SubResource("BoxMesh_ubio8")
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

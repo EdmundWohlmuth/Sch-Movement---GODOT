@@ -22,29 +22,30 @@ var target_pos
 func _ready() -> void:
   weapon_manager.set_weapon(weapon)
 
+## PATHFINDING AND MOVEMENT
 func _physics_process(delta: float) -> void:
   # Add the gravity.
-  if not is_on_floor():
-    velocity += get_gravity() * delta
-
-  # Handle jump.
-  #if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-    #velocity.y = JUMP_VELOCITY
+  if !is_on_floor(): velocity += get_gravity() * delta
     
   if has_target_pos:
       # Move to target position
-      nav_agent.target_position = player.position
+      
+      if global_position.distance_to(player.position) > 10: nav_agent.target_position = player.position ##TEMP NUMNBER - USE WEAPON'S DISRED RANGE
+      else: nav_agent.target_position = global_position
+      
       var path_pos = nav_agent.get_next_path_position()
       var dir = global_position.direction_to(path_pos)
-      
-      velocity = dir * speed
+
+      nav_agent.set_velocity(dir * speed)
       
       # rotate towards movement
       var rotate_towards = dir.signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
       rotation.y = move_toward(rotation.y, rotate_towards, delta * rotation_speed)
 
-  #move_and_slide()
+func circle_player_movement(delta):
+  Vector3(player.position.x, player.position.y, player.position.z)
   
+## CHANGES VELOCITY TO AVOID COLLISIONS WITH OTHER AGENTS
 func _on_navigation_agent_3d_velocity_computed(safe_velocity: Vector3) -> void:
   velocity = velocity.move_toward(safe_velocity, 1)
   move_and_slide()
