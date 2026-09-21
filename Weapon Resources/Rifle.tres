@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_yh111")
+weapon_name = "Rifle"
 damage = 6
 is_full_auto = true
 bullet_num = 1
@@ -15,3 +16,6 @@ knock_back = 4.0
 projectile_type = 0
 total_ammo = 30
 current_ammo = 30
+prefered_distance = 5.0
+maximum_distance = 25.0
+reload_time = 3.0

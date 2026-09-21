@@ -1,7 +1,7 @@
 extends Resource
 class_name weapon_base
 
-var weapon_name:String
+@export var weapon_name:String
 @export var damage:int
 @export var is_full_auto:bool
 
@@ -18,6 +18,11 @@ enum projectile_types { hit_scan, projectile, melee}
 @export var total_ammo:int
 @export var current_ammo:int
 
+@export_category("AI variables")
+@export var prefered_distance:float
+@export var maximum_distance:float
+@export var reload_time:float
+
 var raycast:RayCast3D
 var can_shoot:bool = true
 
@@ -28,12 +33,15 @@ func _ready() -> void:
 func set_full_ammo():
   current_ammo = total_ammo
   
-# if player loose the gun, else wait for reload
-func on_no_ammo():
-  print("discard")
-  SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, false)
+## if player loose the gun, else wait for reload
+func on_no_ammo(is_player:bool):
+  if is_player:
+    print("discard")
+    SignalManager.emit_signal("update_weapon_data", current_ammo, total_ammo, false)
+  else: 
+    pass
 
-# allow weapon to fire again
+## allow weapon to fire again
 func re_enable_shoot():
   can_shoot = true
 

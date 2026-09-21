@@ -30,7 +30,7 @@ func _physics_process(delta: float) -> void:
   if has_target_pos:
       # Move to target position
       
-      if global_position.distance_to(player.position) > 10: nav_agent.target_position = player.position ##TEMP NUMNBER - USE WEAPON'S DISRED RANGE
+      if global_position.distance_to(player.position) > weapon_manager.weapon_stats.prefered_distance: nav_agent.target_position = player.position ##TEMP NUMNBER - USE WEAPON'S DISRED RANGE
       else: nav_agent.target_position = global_position
       
       var path_pos = nav_agent.get_next_path_position()
@@ -41,6 +41,9 @@ func _physics_process(delta: float) -> void:
       # rotate towards movement
       var rotate_towards = dir.signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
       rotation.y = move_toward(rotation.y, rotate_towards, delta * rotation_speed)
+      
+      if global_position.distance_to(player.position) < weapon_manager.weapon_stats.maximum_distance && weapon_manager.weapon_stats.can_shoot:
+        weapon_manager.shoot()
 
 func circle_player_movement(delta):
   Vector3(player.position.x, player.position.y, player.position.z)

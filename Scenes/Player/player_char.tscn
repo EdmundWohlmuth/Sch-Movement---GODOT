@@ -12,7 +12,7 @@
 height = 1.0
 radius = 0.6
 
-[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "special_traverse", "animation_control")]
+[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "special_traverse")]
 collision_layer = 4
 collision_mask = 3
 wall_min_slide_angle = 0.785398
@@ -20,7 +20,6 @@ floor_snap_length = 0.75
 script = ExtResource("1_2bvri")
 weapon_manager = NodePath("WeaponManager")
 special_traverse = NodePath("Head/Camera3D/GrappleHook")
-animation_control = NodePath("")
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")

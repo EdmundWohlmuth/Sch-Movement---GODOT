@@ -4,16 +4,18 @@
 
 [resource]
 script = ExtResource("1_lwsko")
+weapon_name = "Submachine gun"
 damage = 2
 is_full_auto = true
-projectile_num = 1
+bullet_num = 0
 shot_cooldown_time = 0.1
-base_projectile_spread = 5.0
-current_projectile_spread = 5.0
-max_projectile_spread = 25.0
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
 knock_back = 0.2
 projectile_type = 0
-projectile_speed = 0.0
-does_projectile_drop = false
 total_ammo = 25
 current_ammo = 25
+prefered_distance = 6.0
+maximum_distance = 18.0
+reload_time = 5.0

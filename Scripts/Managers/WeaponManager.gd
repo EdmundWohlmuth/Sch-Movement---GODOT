@@ -4,6 +4,7 @@ class_name weapon_node
 @export var controller:CharacterBody3D
 @export var bullet_origin:Node3D
 @onready var timer: Timer = $Timer
+@onready var reload_timer: Timer = $ReloadTimer
 
 enum weapons
 {
@@ -37,6 +38,7 @@ var end_cooldown:Callable = Callable(enable_shoot)
 func _ready() -> void:
   set_weapon(current_weapon)
   timer.connect("timeout", end_cooldown)
+  if !is_player: reload_timer.connect("timeout", weapon_stats.set_full_ammo)
   
 func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
   match weapon:
@@ -78,27 +80,30 @@ func enable_shoot():
 
 func on_shoot():
   if !weapon_stats.can_shoot: return
+  if !is_player: return
   
   if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
     if weapon_stats.current_ammo > 0: # Shoot the Gun
       weapon_stats.current_ammo -= 1
-      SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+      
+      if is_player: SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
       #draw_hit_scan()
       weapon_stats.can_shoot = false
       if weapon_stats.raycast.get_collider() == null:return
       if weapon_stats.raycast.get_collider().is_class("CharacterBody3D"): 
         weapon_stats.raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
       
-      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
       
-    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
 
 func on_shoot_proj():
   if !weapon_stats.can_shoot: return
   if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
     if weapon_stats.current_ammo > 0: # Shoot the Gun
       weapon_stats.current_ammo -= 1
-      SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+      
+      if is_player: SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
       
       # CREATE PROJECTILE
       var proj = load(weapon_stats.projectile_node)
@@ -115,9 +120,19 @@ func on_shoot_proj():
       
       weapon_stats.can_shoot = false
       
-      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+      if weapon_stats.current_ammo <= 0:
+        weapon_stats.can_shoot = false
+        if is_player: weapon_stats.on_no_ammo(is_player)
+        else: reload_timer.start(weapon_stats.reload_time)
+           
       
-    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo()
+    #elif weapon_stats.current_ammo <= 0:
+      #weapon_stats.can_shoot = false
+      #if is_player: weapon_stats.on_no_ammo(is_player)
+      #else: 
+        #await get_tree().create_timer(weapon_stats.reload_time).timeout
+        #weapon_stats.on_no_ammo(is_player)
+        #print("there")
 
 func on_melee():
   pass

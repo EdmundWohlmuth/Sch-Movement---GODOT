@@ -4,16 +4,18 @@
 
 [resource]
 script = ExtResource("1_q33sx")
+weapon_name = "Revolver"
 damage = 10
-is_full_auto = null
-projectile_num = 1
+is_full_auto = false
+bullet_num = 0
 shot_cooldown_time = 1.25
-base_projectile_spread = null
-current_projectile_spread = null
-max_projectile_spread = null
+base_bullet_spread = 0.0
+current_bullet_spread = 0.0
+max_bullet_spread = 0.0
 knock_back = 2.0
 projectile_type = 0
-projectile_speed = null
-does_projectile_drop = null
 total_ammo = 6
 current_ammo = 6
+prefered_distance = 8.0
+maximum_distance = 20.0
+reload_time = 8.0

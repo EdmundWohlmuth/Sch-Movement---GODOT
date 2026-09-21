@@ -4,9 +4,10 @@
 
 [resource]
 script = ExtResource("1_eodkd")
-damage_box_path = ""
+damage_box_path = "Melee"
 num_of_combos = 0
 atk_range = 0.0
+weapon_name = ""
 damage = 0
 is_full_auto = false
 bullet_num = 0
@@ -18,3 +19,5 @@ knock_back = 0.0
 projectile_type = 2
 total_ammo = 0
 current_ammo = 0
+prefered_distance = 2.0
+maximum_distance = 2.0

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_afyrg")
+weapon_name = "Double Barrel Shotgun"
 damage = 5
 is_full_auto = false
 bullet_num = 6
@@ -15,3 +16,6 @@ knock_back = 5.0
 projectile_type = 0
 total_ammo = 2
 current_ammo = 2
+prefered_distance = 5.0
+maximum_distance = 10.0
+reload_time = 5.0

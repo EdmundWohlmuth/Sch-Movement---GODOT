@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_hk6uf")
+weapon_name = "Repeating Shotgun"
 damage = 4
 is_full_auto = false
 bullet_num = 4
@@ -15,3 +16,6 @@ knock_back = 6.0
 projectile_type = 0
 total_ammo = 5
 current_ammo = 5
+prefered_distance = 5.0
+maximum_distance = 25.0
+reload_time = 5.0

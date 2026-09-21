@@ -26,8 +26,9 @@ shape = SubResource("CapsuleShape3D_3pdns")
 layers = 2
 mesh = SubResource("CapsuleMesh_613su")
 
-[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_ubio8")]
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller", "bullet_origin") instance=ExtResource("2_ubio8")]
 controller = NodePath("..")
+bullet_origin = NodePath("../Bullet_Origin")
 current_weapon = 8
 
 [node name="hurt_box" parent="." node_paths=PackedStringArray("health", "hurtbox") instance=ExtResource("3_x1rqp")]
@@ -48,5 +49,8 @@ radius = 1.0
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.1, 0, 0, 0, 0.5, 0, 0.8, 0.5)
 mesh = SubResource("BoxMesh_ubio8")
+
+[node name="Bullet_Origin" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0712979, 0.7, 1.3)
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]
