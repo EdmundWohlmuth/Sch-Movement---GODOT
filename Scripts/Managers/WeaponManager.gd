@@ -56,6 +56,7 @@ func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
   
   if is_player:
     SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
+    weapon_stats.current_ammo = weapon_stats.total_ammo
     weapon_stats.can_shoot = true
   elif !is_player && is_stolen:
     print("my gun!")
@@ -123,7 +124,10 @@ func on_shoot_proj():
       if weapon_stats.current_ammo <= 0:
         weapon_stats.can_shoot = false
         if is_player: weapon_stats.on_no_ammo(is_player)
-        else: reload_timer.start(weapon_stats.reload_time)
+        else: 
+          #print("reload start")
+          weapon_stats.can_shoot = false
+          reload_timer.start(weapon_stats.reload_time)
            
       
     #elif weapon_stats.current_ammo <= 0:
@@ -136,3 +140,10 @@ func on_shoot_proj():
 
 func on_melee():
   pass
+
+
+func _on_reload_timer_timeout() -> void:
+  print("timeout")
+  weapon_stats.current_ammo = weapon_stats.total_ammo
+  weapon_stats.can_shoot = true
+  reload_timer.stop()

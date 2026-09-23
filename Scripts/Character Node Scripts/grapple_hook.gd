@@ -99,7 +99,7 @@ func grapple_pull(delta, speed):
     
   parent.velocity += grapple_vector * delta
 
-# lets the player dangle at the distance they released the reel in option on the Grapple hook
+## lets the player dangle at the distance they released the reel in option on the Grapple hook
 func grapple_hang(delta):
   if grapple_dist == null: return
   
@@ -112,7 +112,7 @@ func grapple_end():
   grapple_cooldown_timer.start(grapple_cooldown_time)
   hook_controller.hook_detached.emit()
  
-# Check enemies weapon and add it to the player's weapon slot 
+## Check enemies weapon and add it to the player's weapon slot 
 func weapon_steal():
   if is_grappling: is_grappling = false
   

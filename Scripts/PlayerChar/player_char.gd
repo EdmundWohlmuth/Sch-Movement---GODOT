@@ -108,7 +108,7 @@ func _input(event):
     if event.is_action_pressed("slide") && current_state != states.AIRBORNE:
       crouch_slide()
       set_state(states.SLIDING)
-    if event.is_action_released("slide"):
+    if event.is_action_released("slide"): 
       end_slide()
       if velocity != Vector3.ZERO && (current_state != states.AIRBORNE || current_state != states.SLIDING): set_state(states.RUNNING)
       elif velocity == Vector3.ZERO: set_state(states.IDLE)
@@ -142,7 +142,7 @@ func set_state(state:states):
     states.DEAD:
       current_state = states.DEAD
       
-  print(str(states.keys()[current_state]))
+  #print(str(states.keys()[current_state]))
   
 func on_state_end():
   match current_state:

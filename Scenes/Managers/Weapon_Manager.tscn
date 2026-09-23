@@ -8,3 +8,5 @@ script = ExtResource("1_2c3qj")
 [node name="Timer" type="Timer" parent="."]
 
 [node name="ReloadTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

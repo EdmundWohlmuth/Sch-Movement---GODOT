@@ -3,6 +3,7 @@ class_name health_node
 
 @export var total_health:int
 @export var current_health:int
+@export var is_player:bool = false
 
 func _ready() -> void:
   current_health = total_health
@@ -12,7 +13,7 @@ func take_damage(damage:int):
   current_health -= damage
   if current_health <= 0: 
     current_health = 0
-    kill_character()
+    if !is_player: kill_character()
   
 # add health to character
 func heal(healing:int):

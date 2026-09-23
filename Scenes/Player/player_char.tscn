@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://d12tyfkvb4luu"]
+[gd_scene load_steps=9 format=3 uid="uid://d12tyfkvb4luu"]
 
 [ext_resource type="Script" uid="uid://c818u2lnv3rnd" path="res://Scripts/PlayerChar/player_char.gd" id="1_2bvri"]
 [ext_resource type="PackedScene" uid="uid://ctlcautjqwklo" path="res://Scenes/Managers/Weapon_Manager.tscn" id="2_pfg0q"]
 [ext_resource type="PackedScene" uid="uid://b0eehwfkelobi" path="res://Scenes/Character Nodes/grapple_hook.tscn" id="3_tywqa"]
+[ext_resource type="PackedScene" uid="uid://0omtc6k3agci" path="res://Scenes/Character Nodes/hurt_box.tscn" id="4_wat63"]
+[ext_resource type="PackedScene" uid="uid://dn3n6t1lx1hld" path="res://Scenes/Character Nodes/health_node.tscn" id="5_upjmk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t3hp8"]
 
@@ -12,13 +14,15 @@
 height = 1.0
 radius = 0.6
 
-[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "special_traverse")]
-collision_layer = 4
+[node name="PlayerCharacterBody" type="CharacterBody3D" node_paths=PackedStringArray("weapon_manager", "health", "hurt_box", "special_traverse")]
+collision_layer = 6
 collision_mask = 3
 wall_min_slide_angle = 0.785398
 floor_snap_length = 0.75
 script = ExtResource("1_2bvri")
 weapon_manager = NodePath("WeaponManager")
+health = NodePath("Health")
+hurt_box = NodePath("hurt_box")
 special_traverse = NodePath("Head/Camera3D/GrappleHook")
 
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
@@ -75,6 +79,15 @@ debug_shape_custom_color = Color(1, 0, 1, 1)
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 avoidance_enabled = true
 radius = 0.75
+
+[node name="hurt_box" parent="." node_paths=PackedStringArray("health", "hurtbox") instance=ExtResource("4_wat63")]
+health = NodePath("../Health")
+hurtbox = NodePath("../PlayerHurtbox")
+
+[node name="Health" parent="." instance=ExtResource("5_upjmk")]
+total_health = 100
+current_health = 100
+is_player = true
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="coyote_timer_timeout"]
 [connection signal="timeout" from="SlideCooldownTimer" to="." method="_on_slide_cooldown_timer_timeout"]

@@ -4,6 +4,7 @@ var speed:float = 0.0
 var damage:int = 0
 var has_gravity:bool = false
 var is_grappleable:bool = false
+var is_player:bool = false
 
 @export var projectile_stats:weapon_base
 
@@ -19,8 +20,16 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
    if shape_cast_3d.is_colliding(): 
     var collision = shape_cast_3d.get_collider(0)
+    if collision == null: return
     
     if collision.is_class("CharacterBody3D"):
       collision.hurt_box.on_hit(damage, 0)
-    else: pass
-    queue_free()
+      #print("DEALT " + str(damage), " DAMAGE!")
+      free_projectile()
+    elif collision != null:
+      free_projectile()
+      #print("hit " + str(collision))
+
+func free_projectile():
+  visible = false
+  queue_free()

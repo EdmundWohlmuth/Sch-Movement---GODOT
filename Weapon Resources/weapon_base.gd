@@ -2,20 +2,31 @@ extends Resource
 class_name weapon_base
 
 @export var weapon_name:String
+## Damage each 'bulet' deals
 @export var damage:int
+## If the weapon shoots when held down or not
 @export var is_full_auto:bool
 
+## How many 'bullets' the gun shoots at a time
 @export var bullet_num:int
+## Time in seconds between one 'bullet' and the next
 @export var shot_cooldown_time:float
+## Random offset of the bullets
 @export var base_bullet_spread:float
 @export var current_bullet_spread:float
+## The maximum ammount the 'bullets' can be offset by (usually after prolonged firing)
 @export var max_bullet_spread:float
+## How much the weapon pushes the player away from the direction of shooting
 @export var knock_back:float
+## What kind of weapon it is
 enum projectile_types { hit_scan, projectile, melee}
 
+## projectile to use
 @export var projectile_type:projectile_types
 
+## Maxium ammo weapon has
 @export var total_ammo:int
+## current ammount of ammo
 @export var current_ammo:int
 
 @export_category("AI variables")

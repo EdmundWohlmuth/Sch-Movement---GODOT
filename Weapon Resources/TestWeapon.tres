@@ -7,6 +7,7 @@ script = ExtResource("1_d467n")
 projectile_speed = 2.0
 does_projectile_drop = false
 is_grappleable = true
+projectile_life = 25.0
 projectile_node = "res://Weapon Resources/Projectile Resources/rocket_projectile.tscn"
 weapon_name = "TEST"
 damage = 1
