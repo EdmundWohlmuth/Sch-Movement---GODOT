@@ -127,8 +127,7 @@ func on_shoot_proj():
         else: 
           #print("reload start")
           weapon_stats.can_shoot = false
-          reload_timer.start(weapon_stats.reload_time)
-           
+          reload_timer.start(weapon_stats.reload_time)     
       
     #elif weapon_stats.current_ammo <= 0:
       #weapon_stats.can_shoot = false

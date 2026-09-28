@@ -193,7 +193,7 @@ func _physics_process(delta):
   on_wall_check()
   move_and_slide()
 
-# Makes it so the player 'sticks' to the ground
+## Makes it so the player 'sticks' to the ground
 func align_to_floor():
   var floor_normal
   if !is_on_floor_only(): floor_normal = Vector3.UP
@@ -206,7 +206,7 @@ func align_to_floor():
   
   if global_transform != xform: global_transform = global_transform.interpolate_with(xform, 0.15).orthonormalized()
 
-# Apply ground movement
+## Apply ground movement
 func movement(delta):
   if (is_on_floor() || on_wall): 
     if available_jumps != total_jumps: available_jumps = total_jumps
@@ -220,7 +220,7 @@ func movement(delta):
   
   if is_ground_slope(): last_y = global_position.y
 
-# Checks to see if Sliding has ended
+## Checks to see if Sliding has ended
 func end_slide():
   if Input.is_action_just_released("slide"):
     ground_deccel = norm_deccel
@@ -240,7 +240,7 @@ func handle_attack():
     weapon_manager.shoot() 
     weapon_knockback()
     
-# Handles jump input and physics
+## Handles jump input and physics
 func handle_jump():
   has_gravity = true
   
@@ -268,14 +268,14 @@ func on_wall_check():
     ground_deccel = norm_deccel
     #wallrun_juice()
   
-# Manage player input by checking the current input and setting the direction for later use
+## Manage player input by checking the current input and setting the direction for later use
 func manage_input():
   var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back") 
   var floor_normal = grounding_ray.get_collision_normal()
   
   direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
-# This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
+## This adds mommentmum to the character gradually to keep true to the original build that uses a Rigidbody
 func handle_movement(delta):
   if speed_cap > 0:
     var accel_speed = ground_accel * delta * speed_cap
@@ -285,7 +285,7 @@ func handle_movement(delta):
   
     set_decceleration(delta)
  
-# sets the value at which the character deccelerates 
+## sets the value at which the character deccelerates 
 func set_decceleration(delta):
   if is_ground_slope(): 
     if is_sliding && check_down_slope(): return
@@ -295,7 +295,7 @@ func set_decceleration(delta):
     if !is_sliding: deceleration(ground_deccel, delta)
     else: deceleration(slide_deccel, delta)
   
-# This adds friction to the character to slow them down while on the ground
+## This adds friction to the character to slow them down while on the ground
 func deceleration(deccel:float, delta):
   var control = max(self.velocity.length(), deccel)
   var drop = control * delta
@@ -304,15 +304,15 @@ func deceleration(deccel:float, delta):
     real_speed /= self.velocity.length()
   self.velocity *= real_speed
 
-# allows for steering while in the air for more floaty air movement
+## allows for steering while in the air for more floaty air movement
 func handle_air_strafe(delta):
   self.velocity += air_accel * direction * delta
 
-# keeps the player moving toward the wall to allow wallrunning
+## keeps the player moving toward the wall to allow wallrunning
 func press_to_wall(delta):  
   self.velocity -= wall_normal * 4 * delta
 
-# reduces the size of the player and grants a small speed boost with high friction 
+## reduces the size of the player and grants a small speed boost with high friction 
 func crouch_slide():
   if Input.is_action_pressed("slide") && !is_sliding:
     is_sliding = true
@@ -321,7 +321,7 @@ func crouch_slide():
 
     crouch_char()
 
-# kills a lot (if not all) of x / z momentum and drastically increases downward momentum
+## kills a lot (if not all) of x / z momentum and drastically increases downward momentum
 func ground_pound():
   if Input.is_action_just_pressed("slide") && !is_sliding && !is_on_floor():
     pass # change for special movement
@@ -330,7 +330,7 @@ func wallrun_juice():
   if on_wall: camera.rotation += Vector3((wallrun_tilt_angle * -wall_normal.x), 0, (wallrun_tilt_angle * -wall_normal.z))
   else: camera.rotation = Vector3.ZERO
  
-# Should visually drop player to crouch / slide height (NOT WORKING) 
+## Should visually drop player to crouch / slide height (NOT WORKING) 
 func crouch_char(crouched:bool = true):
   if crouched: 
     scale.y = 0.5
@@ -339,7 +339,7 @@ func crouch_char(crouched:bool = true):
     scale.y = 1
     position.y += 0.5
 
-# Change velocity based on weapon knockback
+## Change velocity based on weapon knockback
 func weapon_knockback():
   # only knockback while airborne
   if weapon_manager.weapon_stats.knock_back <= 0 || (is_on_floor() || is_on_wall()): return

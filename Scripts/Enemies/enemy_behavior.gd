@@ -39,11 +39,13 @@ func _physics_process(delta: float) -> void:
       nav_agent.set_velocity(dir * speed)
       
       # rotate towards movement
-      var rotate_towards = global_position.direction_to(path_pos).signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
-      rotation.y = move_toward(rotation.y, rotate_towards, delta * rotation_speed)
+      var rotate_towards = global_position.direction_to(player.position).signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
+      rotation.y = lerp_angle(rotation.y, rotate_towards, delta * rotation_speed)
       
       if global_position.distance_to(player.position) < weapon_manager.weapon_stats.maximum_distance && weapon_manager.weapon_stats.can_shoot:
         weapon_manager.shoot()
+  
+  weapon_manager.bullet_origin.look_at(player.position)
 
 func circle_player_movement(delta):
   Vector3(player.position.x, player.position.y, player.position.z)
