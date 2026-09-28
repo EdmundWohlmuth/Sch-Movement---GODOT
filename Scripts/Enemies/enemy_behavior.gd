@@ -11,8 +11,11 @@ var current_weapon:weapon_base
 
 var has_target_pos:bool = true
 var target_pos
+var can_see_player:bool = false
+@onready var sightline_ray_cast: RayCast3D = $SightlineRayCast
 
 @export var player:CharacterBody3D
+var last_known_pos:Vector3
 
 # ==== NODES ==== #
 @onready var health: health_node = $Health
@@ -26,26 +29,49 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
   # Add the gravity.
   if !is_on_floor(): velocity += get_gravity() * delta
+ 
+  sightline_check()
+  move_character(delta)
+  shoot_check()
+
+## Cecks to see if the agent can see the player
+func sightline_check():
+  sightline_ray_cast.look_at(player.position)
+
+  if sightline_ray_cast.is_colliding():
+    var collider = sightline_ray_cast.get_collider()
+    if collider == player: 
+      if player.position.distance_to(self.position) <= 150:
+        can_see_player = true
+    else: can_see_player = false
+
+## handle the agents movement
+func move_character(delta:float):
+  if has_target_pos && can_see_player:
+    # Move to target position
     
-  if has_target_pos:
-      # Move to target position
-      
+    var path_pos = nav_agent.get_next_path_position()
+    var dir = global_position.direction_to(path_pos)
+    
+    # if can see the player move to player, otherwise goto player's last know pos
+    if can_see_player:   
       if global_position.distance_to(player.position) > weapon_manager.weapon_stats.prefered_distance: nav_agent.target_position = player.position
       else: nav_agent.target_position = global_position
-      
-      var path_pos = nav_agent.get_next_path_position()
-      var dir = global_position.direction_to(path_pos)
+      last_known_pos = player.position
+    else:
+      nav_agent.target_position = last_known_pos
 
-      nav_agent.set_velocity(dir * speed)
-      
-      # rotate towards movement
-      var rotate_towards = global_position.direction_to(player.position).signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
-      rotation.y = lerp_angle(rotation.y, rotate_towards, delta * rotation_speed)
-      
-      if global_position.distance_to(player.position) < weapon_manager.weapon_stats.maximum_distance && weapon_manager.weapon_stats.can_shoot:
-        weapon_manager.shoot()
-  
-  weapon_manager.bullet_origin.look_at(player.position)
+    # rotate towards movement
+    var rotate_towards = global_position.direction_to(player.position).signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
+    rotation.y = lerp_angle(rotation.y, rotate_towards, delta * rotation_speed) 
+    
+    nav_agent.set_velocity(dir * speed)
+    
+    weapon_manager.bullet_origin.look_at(player.position)
+
+func shoot_check():
+  if global_position.distance_to(player.position) < weapon_manager.weapon_stats.maximum_distance && weapon_manager.weapon_stats.can_shoot && can_see_player:
+    weapon_manager.shoot()
 
 func circle_player_movement(delta):
   Vector3(player.position.x, player.position.y, player.position.z)

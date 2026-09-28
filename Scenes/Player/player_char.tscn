@@ -28,9 +28,10 @@ special_traverse = NodePath("Head/Camera3D/GrappleHook")
 [node name="PlayerHurtbox" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_t3hp8")
 
-[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller") instance=ExtResource("2_pfg0q")]
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller", "raycast") instance=ExtResource("2_pfg0q")]
 controller = NodePath("..")
 is_player = true
+raycast = NodePath("../Head/Camera3D/RayCast3D")
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 wait_time = 0.15

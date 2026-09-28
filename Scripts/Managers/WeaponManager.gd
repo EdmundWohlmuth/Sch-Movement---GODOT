@@ -35,6 +35,8 @@ const TEST_WEAPON = preload("res://Weapon Resources/TestWeapon.tres")
 
 var end_cooldown:Callable = Callable(enable_shoot)
 
+@export var raycast:RayCast3D
+
 func _ready() -> void:
   set_weapon(current_weapon)
   timer.connect("timeout", end_cooldown)
@@ -81,7 +83,7 @@ func enable_shoot():
 
 func on_shoot():
   if !weapon_stats.can_shoot: return
-  if !is_player: return
+  #if !is_player: return
   
   if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
     if weapon_stats.current_ammo > 0: # Shoot the Gun
@@ -90,9 +92,10 @@ func on_shoot():
       if is_player: SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
       #draw_hit_scan()
       weapon_stats.can_shoot = false
-      if weapon_stats.raycast.get_collider() == null:return
-      if weapon_stats.raycast.get_collider().is_class("CharacterBody3D"): 
-        weapon_stats.raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
+      if raycast.get_collider() == null:return
+      if raycast.get_collider().is_class("CharacterBody3D"): 
+        raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
+        if !is_player: print("HIT")
       
       if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
       

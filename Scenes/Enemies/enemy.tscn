@@ -26,17 +26,12 @@ shape = SubResource("CapsuleShape3D_3pdns")
 layers = 2
 mesh = SubResource("CapsuleMesh_613su")
 
-[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller", "bullet_origin") instance=ExtResource("2_ubio8")]
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("controller", "bullet_origin", "raycast") instance=ExtResource("2_ubio8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 controller = NodePath("..")
 bullet_origin = NodePath("../Bullet_Origin")
 current_weapon = 8
-
-[node name="RayCast3D" type="RayCast3D" parent="WeaponManager"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.2, 0.733739)
-target_position = Vector3(0, 0, -500)
-collision_mask = 11
-debug_shape_custom_color = Color(1, 0, 1, 1)
+raycast = NodePath("../Bullet_Origin/BulletCast")
 
 [node name="hurt_box" parent="." node_paths=PackedStringArray("health", "hurtbox") instance=ExtResource("3_x1rqp")]
 health = NodePath("../Health")
@@ -57,7 +52,17 @@ radius = 1.0
 transform = Transform3D(0.5, 0, 0, 0, 0.1, 0, 0, 0, 0.5, 0, 0.8, 0.5)
 mesh = SubResource("BoxMesh_ubio8")
 
+[node name="SightlineRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -7.45058e-09, 0.3, 0.733739)
+target_position = Vector3(0, 0, -500)
+collision_mask = 7
+collide_with_areas = true
+debug_shape_custom_color = Color(1, 0, 1, 1)
+
 [node name="Bullet_Origin" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0712979, 0.7, 1.3)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0712979, 0.7, 1.1)
+
+[node name="BulletCast" type="RayCast3D" parent="Bullet_Origin"]
+target_position = Vector3(0, 0, -500)
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]
