@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dlqm10204rcaq"]
 
-[ext_resource type="Script" path="res://addons/grappling_hook_3d/src/hook_model.gd" id="1_axmsb"]
+[ext_resource type="Script" uid="uid://cj8gxtw0d7evv" path="res://addons/grappling_hook_3d/src/hook_model.gd" id="1_axmsb"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2uiuu"]
 top_radius = 0.05

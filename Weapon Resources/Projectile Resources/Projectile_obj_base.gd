@@ -2,6 +2,7 @@ extends RigidBody3D
 
 var speed:float = 0.0
 var damage:int = 0
+var lifetime:float = 0
 var has_gravity:bool = false
 var is_grappleable:bool = false
 var is_player:bool = false
@@ -16,6 +17,7 @@ func _ready() -> void:
   if !has_gravity: gravity_scale = 0
   if is_grappleable: set_collision_layer_value(4, true)
   apply_impulse(transform.basis * Vector3(0, 0, -speed * 10)) # NEED THIS TO GO TOWARDS RAYCAST POINT
+  get_tree().create_timer(lifetime).timeout.connect(free_projectile)
   
 func _physics_process(_delta: float) -> void:
    if shape_cast_3d.is_colliding(): 

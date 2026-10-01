@@ -3,8 +3,10 @@ class_name weapon_node
 
 @export var controller:CharacterBody3D
 @export var bullet_origin:Node3D
+
 @onready var timer: Timer = $Timer
 @onready var reload_timer: Timer = $ReloadTimer
+@onready var line_renderer: Node3D = $LineRenderer
 
 enum weapons
 {
@@ -32,6 +34,8 @@ const ROCKET_LAUNCHER = preload("res://Weapon Resources/RocketLauncher.tres")
 const SMG = preload("res://Weapon Resources/SMG.tres")
 const AUTO_PISTOL = preload("res://Weapon Resources/AutoPistol.tres")
 const TEST_WEAPON = preload("res://Weapon Resources/TestWeapon.tres")
+
+const LINE_RENDERER = preload("res://Scenes/Tools/LineRenderer.tscn")
 
 var end_cooldown:Callable = Callable(enable_shoot)
 
@@ -93,8 +97,12 @@ func on_shoot():
       #draw_hit_scan()
       weapon_stats.can_shoot = false
       if raycast.get_collider() == null:return
+      else: create_line(bullet_origin.position, raycast.get_collision_point(), raycast.get_collision_normal())
+
+        
       if raycast.get_collider().is_class("CharacterBody3D"): 
         raycast.get_collider().hurt_box.on_hit(weapon_stats.damage, 0)
+
         if !is_player: print("HIT")
       
       if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
@@ -117,9 +125,12 @@ func on_shoot_proj():
       instance.has_gravity = weapon_stats.does_projectile_drop
       instance.is_grappleable = weapon_stats.is_grappleable
       instance.damage = weapon_stats.damage
+      instance.lifetime = weapon_stats.projectile_life
       
       instance.position = bullet_origin.global_position
       instance.transform.basis = bullet_origin.global_transform.basis
+      
+      instance.rotation.y = instance.rotation.y + randf_range(-weapon_stats.base_bullet_spread, weapon_stats.base_bullet_spread)
       get_parent().get_parent().add_child(instance)
       
       weapon_stats.can_shoot = false
@@ -143,6 +154,13 @@ func on_shoot_proj():
 func on_melee():
   pass
 
+
+func create_line(start:Vector3, end:Vector3, normal):
+  var line
+  line = LINE_RENDERER.instantiate()
+  add_child(line)
+          
+  line.extend_from_to(start, end, normal)
 
 func _on_reload_timer_timeout() -> void:
   print("timeout")

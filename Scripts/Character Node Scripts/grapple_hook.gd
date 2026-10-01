@@ -22,11 +22,11 @@ func _physics_process(_delta: float) -> void:
   # end grappling early if hitting a wall
   if is_grappling && ((parent.is_on_floor() || parent.is_on_wall()) && !is_pulling): grapple_end()
 
-# Generaic func name for player controller to call
+## Generaic func name for player controller to call
 func start_special_move(delta):
   grapple(delta)
 
-# handle grapple mechanic
+## handle grapple mechanic
 func grapple(delta):
   # what is grapple doing + setting the grapple to pos
   if Input.is_action_just_pressed("grapple") && can_grapple: check_grapple_type() ## need to keep checking if layer 4
@@ -54,7 +54,7 @@ func is_in_grapple_range(there) -> bool:
   if distance > max_grapple_dist: return false
   else: return true
 
-# gets and sets initial point of grapple
+## gets and sets initial point of grapple
 func set_grapple():
   if grapple_cast.is_colliding():
     is_grappling = false
@@ -67,7 +67,7 @@ func set_grapple():
     is_grappling = true  
     hook_controller.hook_launched.emit()
 
-# Emit signal to UI for crosshair colors and juice
+## Emit signal to UI for crosshair colors and juice
 func set_crosshair_juice():
   if grapple_cast.is_colliding() && can_grapple && is_in_grapple_range(grapple_cast.get_collision_point()): 
     if grapple_cast.get_collider() == null: return
@@ -82,7 +82,7 @@ func set_crosshair_juice():
     if can_grapple: SignalManager.emit_signal("update_crosshair", 0)
     else: SignalManager.emit_signal("update_crosshair", 3)
 
-# determines what function is played when the grapple connects with a collision
+## determines what function is played when the grapple connects with a collision
 func check_grapple_type():
   if !grapple_cast.is_colliding(): return
   if !is_in_grapple_range(grapple_cast.get_collision_point()): return
@@ -90,7 +90,7 @@ func check_grapple_type():
   if grapple_cast.get_collider().collision_layer == 1: set_grapple()
   elif grapple_cast.get_collider().collision_layer == 2: weapon_steal()
 
-# pulls player towards collision area
+## pulls player towards collision area
 func grapple_pull(delta, speed):
   var grapple_vector
   var grapple_dir = (grapple_point - parent.position).normalized()

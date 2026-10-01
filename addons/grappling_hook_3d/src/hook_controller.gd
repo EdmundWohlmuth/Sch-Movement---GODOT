@@ -58,7 +58,7 @@ func _launch_hook() -> void:
   
   hook_target_node.position = hook_raycast.get_collision_point() - body.global_position
   hook_target_normal = hook_raycast.get_collision_normal()
-  print(str(hook_target_normal))
+  #print(str(hook_target_normal))
   
   _hook_model = hook_scene.instantiate()
   add_child(_hook_model)

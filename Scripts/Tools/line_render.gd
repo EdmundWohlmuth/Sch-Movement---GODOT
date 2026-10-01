@@ -91,4 +91,4 @@ func draw_line(originPos:Vector3, endPos:Vector3):
   mesh.surface_end()
 
 func remove_line():
-  pass
+  queue_free()
