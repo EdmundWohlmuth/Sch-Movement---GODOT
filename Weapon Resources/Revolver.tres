@@ -19,3 +19,4 @@ current_ammo = 6
 prefered_distance = 8.0
 maximum_distance = 20.0
 reload_time = 8.0
+shots_until_accuracy = 2

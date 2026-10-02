@@ -12,6 +12,10 @@ var current_weapon:weapon_base
 var has_target_pos:bool = true
 var target_pos
 var can_see_player:bool = false
+
+var first_shots:bool = true
+var shot_count:int = 0
+
 @onready var sightline_ray_cast: RayCast3D = $SightlineRayCast
 
 @export var player:CharacterBody3D
@@ -43,7 +47,10 @@ func sightline_check():
     if collider == player: 
       if player.position.distance_to(self.position) <= 150:
         can_see_player = true
-    else: can_see_player = false
+    else: 
+      can_see_player = false
+      first_shots = true
+      shot_count = 0
 
 ## handle the agents movement
 func move_character(delta:float):
@@ -71,7 +78,14 @@ func move_character(delta:float):
 
 func shoot_check():
   if global_position.distance_to(player.position) < weapon_manager.weapon_stats.maximum_distance && weapon_manager.weapon_stats.can_shoot && can_see_player:
-    weapon_manager.shoot()
+    if shot_count >= weapon_manager.weapon_stats.shots_until_accuracy: first_shots = false
+    else: 
+      shot_count += 1
+    
+    if first_shots:
+      weapon_manager.shoot(0.1)
+    else: weapon_manager.shoot()
+    
 
 func circle_player_movement(delta):
   Vector3(player.position.x, player.position.y, player.position.z)

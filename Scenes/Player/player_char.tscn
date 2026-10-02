@@ -31,7 +31,7 @@ shape = SubResource("CapsuleShape3D_t3hp8")
 [node name="WeaponManager" parent="." node_paths=PackedStringArray("controller", "raycast") instance=ExtResource("2_pfg0q")]
 controller = NodePath("..")
 is_player = true
-raycast = NodePath("../Head/Camera3D/RayCast3D")
+raycast = NodePath("../Head/Camera3D/BulletCast")
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 wait_time = 0.15
@@ -46,6 +46,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.466261)
+target_position = Vector3(0, 0, -500)
+collision_mask = 11
+debug_shape_custom_color = Color(1, 0, 1, 1)
+
+[node name="BulletCast" type="RayCast3D" parent="Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.466261)
 target_position = Vector3(0, 0, -500)
 collision_mask = 11

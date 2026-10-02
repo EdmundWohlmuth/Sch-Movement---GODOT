@@ -65,19 +65,21 @@ func set_weapon(weapon:weapons, is_stolen:bool = false) -> void:
     weapon_stats.current_ammo = weapon_stats.total_ammo
     weapon_stats.can_shoot = true
   elif !is_player && is_stolen:
-    print("my gun!")
+    #print("my gun!")
+    pass
   elif !is_player && !is_stolen:
-    print("rearmed!")
+    #print("rearmed!")
+    pass
 
 func discard_weapon():
   if !is_player: return
   # Drop 'weapon' with weapon type on it
   set_weapon(weapons.MELEE)
   
-func shoot():
+func shoot(innacuracy_mod:float = 0):
   if timer.is_stopped(): timer.start(weapon_stats.shot_cooldown_time)
   match weapon_stats.projectile_type:
-    weapon_stats.projectile_types.hit_scan: on_shoot()
+    weapon_stats.projectile_types.hit_scan: on_shoot(innacuracy_mod)
     weapon_stats.projectile_types.projectile: on_shoot_proj()
     weapon_stats.projectile_types.melee: on_melee()
 
@@ -85,9 +87,10 @@ func enable_shoot():
   weapon_stats.re_enable_shoot()
   timer.stop()
 
-func on_shoot():
+func on_shoot(innacuracy_mod:float = 0):
   if !weapon_stats.can_shoot: return
-  #if !is_player: return
+  
+  raycast.rotation.y = randf_range(-weapon_stats.base_bullet_spread + -innacuracy_mod, weapon_stats.base_bullet_spread + innacuracy_mod)
   
   if weapon_stats.projectile_type != weapon_stats.projectile_types.melee: 
     if weapon_stats.current_ammo > 0: # Shoot the Gun
@@ -96,8 +99,9 @@ func on_shoot():
       if is_player: SignalManager.emit_signal("update_weapon_data", weapon_stats.current_ammo, weapon_stats.total_ammo, true)
       #draw_hit_scan()
       weapon_stats.can_shoot = false
+      ##TODO: once more gamefeedback & juice is in player wont have 'bullet ray'
       if raycast.get_collider() == null:return
-      else: create_line(bullet_origin.position, raycast.get_collision_point(), raycast.get_collision_normal())
+      else: create_line(raycast.position, raycast.get_collision_point(), raycast.get_collision_normal())
 
         
       if raycast.get_collider().is_class("CharacterBody3D"): 
@@ -105,9 +109,15 @@ func on_shoot():
 
         if !is_player: print("HIT")
       
-      if weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
-      
-    elif weapon_stats.current_ammo <= 0: weapon_stats.on_no_ammo(is_player)
+      if weapon_stats.current_ammo <= 0:
+        weapon_stats.can_shoot = false
+        if is_player: weapon_stats.on_no_ammo(is_player)
+        else: 
+          #print("reload start")
+          weapon_stats.can_shoot = false
+          reload_timer.start(weapon_stats.reload_time)     
+    
+  #raycast.rotation.y = 0
 
 func on_shoot_proj():
   if !weapon_stats.can_shoot: return
@@ -163,7 +173,7 @@ func create_line(start:Vector3, end:Vector3, normal):
   line.extend_from_to(start, end, normal)
 
 func _on_reload_timer_timeout() -> void:
-  print("timeout")
+  #print("timeout")
   weapon_stats.current_ammo = weapon_stats.total_ammo
   weapon_stats.can_shoot = true
   reload_timer.stop()

@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://c80174843efqo"]
+[gd_scene load_steps=5 format=3 uid="uid://c80174843efqo"]
 
 [ext_resource type="Script" uid="uid://cp8icgt1c8ydc" path="res://Scenes/Tools/line_renderer.gd" id="1_pfmn4"]
+[ext_resource type="Shader" uid="uid://go6o1jr2od5b" path="res://Scenes/Tools/LineShader.gdshader" id="2_yjw61"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pfmn4"]
-albedo_color = Color(1, 0.788235, 0, 1)
-emission_enabled = true
-emission = Color(1, 1, 0, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r635m"]
+render_priority = 0
+shader = ExtResource("2_yjw61")
+shader_parameter/colour_r = 1.0
+shader_parameter/colour_g = 1.0
+shader_parameter/colour_b = 0.0
+shader_parameter/colour_a = 0.76
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pfmn4"]
-material = SubResource("StandardMaterial3D_pfmn4")
+material = SubResource("ShaderMaterial_r635m")
 top_radius = 0.05
 bottom_radius = 0.05
 radial_segments = 16
@@ -20,6 +24,7 @@ line_mesh = NodePath("LineMesh")
 
 [node name="LineMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+cast_shadow = 0
 mesh = SubResource("CylinderMesh_pfmn4")
 
 [node name="Timer" type="Timer" parent="."]

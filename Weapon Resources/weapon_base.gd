@@ -33,6 +33,7 @@ enum projectile_types { hit_scan, projectile, melee}
 @export var prefered_distance:float
 @export var maximum_distance:float
 @export var reload_time:float
+@export var shots_until_accuracy:int
 
 var raycast:RayCast3D
 var can_shoot:bool = true
