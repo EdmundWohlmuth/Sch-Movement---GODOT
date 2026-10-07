@@ -8,14 +8,14 @@ render_priority = 0
 shader = ExtResource("2_yjw61")
 shader_parameter/colour_r = 1.0
 shader_parameter/colour_g = 1.0
-shader_parameter/colour_b = 0.0
+shader_parameter/colour_b = 0.28
 shader_parameter/colour_a = 0.76
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pfmn4"]
 material = SubResource("ShaderMaterial_r635m")
 top_radius = 0.05
 bottom_radius = 0.05
-radial_segments = 16
+radial_segments = 8
 rings = 1
 
 [node name="LineRenderer" type="Node3D" node_paths=PackedStringArray("line_mesh")]

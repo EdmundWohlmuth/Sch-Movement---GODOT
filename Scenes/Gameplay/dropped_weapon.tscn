@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqq1rgf12bygo"]
+
+[ext_resource type="Script" uid="uid://b11bqmbg64wbk" path="res://Scripts/Gameplay/dropped_weapon.gd" id="1_fobdi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tv0yb"]
+size = Vector3(0.2, 0.1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tv0yb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tv0yb"]
+size = Vector3(0.2, 0.1, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tv0yb"]
+radius = 1.0
+
+[node name="DroppedWeapon" type="RigidBody3D"]
+collision_layer = 15
+collision_mask = 15
+script = ExtResource("1_fobdi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_tv0yb")
+surface_material_override/0 = SubResource("StandardMaterial3D_tv0yb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.23517e-08, -0.000296913, -0.00011196)
+shape = SubResource("BoxShape3D_tv0yb")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 3
+collision_mask = 3
+input_ray_pickable = false
+
+[node name="TriggerShape" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_tv0yb")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

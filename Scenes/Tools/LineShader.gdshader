@@ -12,7 +12,7 @@ void fragment() {
   //if (UV.x > 0.5) {
     //ALPHA = 0.0;
   //}
-  
+  //
   //if (UV.y > 0.5) {
     //ALPHA = 0.0;
   //}

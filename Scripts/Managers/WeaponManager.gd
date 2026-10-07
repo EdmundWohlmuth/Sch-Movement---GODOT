@@ -6,7 +6,7 @@ class_name weapon_node
 
 @onready var timer: Timer = $Timer
 @onready var reload_timer: Timer = $ReloadTimer
-@onready var line_renderer: Node3D = $LineRenderer
+#@onready var line_renderer: Node3D = $LineRenderer
 
 enum weapons
 {
@@ -36,6 +36,7 @@ const AUTO_PISTOL = preload("res://Weapon Resources/AutoPistol.tres")
 const TEST_WEAPON = preload("res://Weapon Resources/TestWeapon.tres")
 
 const LINE_RENDERER = preload("res://Scenes/Tools/LineRenderer.tscn")
+const DROPPED_WEAPON = preload("res://Scenes/Gameplay/dropped_weapon.tscn")
 
 var end_cooldown:Callable = Callable(enable_shoot)
 
@@ -111,7 +112,9 @@ func on_shoot(innacuracy_mod:float = 0):
       
       if weapon_stats.current_ammo <= 0:
         weapon_stats.can_shoot = false
-        if is_player: weapon_stats.on_no_ammo(is_player)
+        if is_player: 
+          create_dropped_obj()
+          weapon_stats.on_no_ammo(is_player)
         else: 
           #print("reload start")
           weapon_stats.can_shoot = false
@@ -147,7 +150,10 @@ func on_shoot_proj():
       
       if weapon_stats.current_ammo <= 0:
         weapon_stats.can_shoot = false
-        if is_player: weapon_stats.on_no_ammo(is_player)
+        if is_player:
+          print("here")
+          create_dropped_obj()
+          weapon_stats.on_no_ammo(is_player)
         else: 
           #print("reload start")
           weapon_stats.can_shoot = false
@@ -164,11 +170,20 @@ func on_shoot_proj():
 func on_melee():
   pass
 
+## creates a dropped weapon object for ai to pickup
+func create_dropped_obj():
+  var dropped_gun
+  dropped_gun = DROPPED_WEAPON.instantiate()
+  get_parent().get_parent().add_child(dropped_gun)
+  dropped_gun.global_position = bullet_origin.global_position
+  dropped_gun.apply_impulse(Vector3.FORWARD * 10)
 
+## creates the line effect for hit scan weapons
 func create_line(start:Vector3, end:Vector3, normal):
   var line
   line = LINE_RENDERER.instantiate()
-  add_child(line)
+  get_parent().get_parent().add_child(line)
+  line.global_position = bullet_origin.global_position
           
   line.extend_from_to(start, end, normal)
 
